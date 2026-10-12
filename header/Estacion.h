@@ -36,7 +36,9 @@ public:
     // void listarBicicletasConXKm(int km);
 
     // Gestionar la cola de espera de una estación.
+    // Retirar una bicicleta de una estación. Si no hay bicicletas disponibles, el usuario se agrega a la cola de espera.
     void retirarBicicleta(int dniUsuario);
+    // Devolver una bicicleta a una estación. Si hay usuarios en la cola de espera, se le da la bicicleta al primero de la cola. Si no hay usuarios en la cola, se incrementa el contador de bicicletas disponibles.
     void devolverBicicleta();
 };
 
