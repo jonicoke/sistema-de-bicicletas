@@ -58,14 +58,14 @@ int ColaEspera::desencolar() {
         this->ultimo = nullptr;
     }
 
-    // ¡CRUCIAL! Liberamos la memoria del nodo viejo para Valgrind
+    // Liberamos la memoria del nodo viejo para Valgrind
     delete nodoAAtender;
 
     return dni; // Devolvemos el DNI de la persona que acabamos de sacar
 }
 
 // 6. Ver quién está primero sin sacarlo de la fila
-int ColaEspera::verFrente() const {
+int ColaEspera::verPrimero() const {
     if (estaVacia()) {
         throw runtime_error("La cola está vacía.");
     }

@@ -27,7 +27,7 @@ public:
     bool estaVacia() const;
     
     // Método auxiliar opcional para ver quién es el primero sin sacarlo
-    int verFrente() const;
+    int verPrimero() const;
 };
 
 #endif

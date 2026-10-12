@@ -36,8 +36,8 @@ public:
     // void listarBicicletasConXKm(int km);
 
     // Gestionar la cola de espera de una estación.
-    string gestionarColaDeEspera();
-
+    void retirarBicicleta(int dniUsuario);
+    void devolverBicicleta();
 };
 
 #endif
