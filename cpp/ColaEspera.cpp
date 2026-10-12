@@ -65,7 +65,7 @@ int ColaEspera::desencolar() {
 }
 
 // 6. Ver quién está primero sin sacarlo de la fila
-int ColaEspera::verFrente() const {
+int ColaEspera::verPrimero() const {
     if (estaVacia()) {
         throw runtime_error("La cola está vacía.");
     }
