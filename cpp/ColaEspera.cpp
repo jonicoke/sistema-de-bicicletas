@@ -58,7 +58,7 @@ int ColaEspera::desencolar() {
         this->ultimo = nullptr;
     }
 
-    // ¡CRUCIAL! Liberamos la memoria del nodo viejo para Valgrind
+    // Liberamos la memoria del nodo viejo para Valgrind
     delete nodoAAtender;
 
     return dni; // Devolvemos el DNI de la persona que acabamos de sacar
