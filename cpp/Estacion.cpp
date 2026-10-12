@@ -9,13 +9,37 @@ Estacion::Estacion(const string &codigo, const string &nombre, const string &bar
     this->capacidadAnclajes = capacidadAnclajes;
     this->bicisDisponibles = 0;
 }
-void Estacion::mostrarInformacion()
-{
-    cout << "Codigo: " << codigo << endl;
-    cout << "Nombre: " << nombre << endl;
-    cout << "Barrio: " << barrio << endl;
-    cout << "Capacidad de anclajes: " << capacidadAnclajes << endl;
-    cout << "Bicicletas disponibles: " << bicisDisponibles << endl;
+void Estacion::mostrarInformacion(){
+    cout << "Codigo de estacion : " << codigo << endl;
+    cout << "Nombre de estacion : " << nombre << endl;
+    cout << "Barrio de estacion : " << barrio << endl;
+    cout << "Capacidad de anclaje : " << capacidadAnclajes << endl;
+    cout << "Bicis disponibles : " << bicisDisponibles << endl;
+}
+
+
+string Estacion::getCodigo() const {
+    return codigo;
+}
+
+const string& Estacion::getNombre() const {
+    return nombre;
+}
+
+const string& Estacion::getBarrio() const {
+    return barrio;
+}
+
+int Estacion::getCapacidadAnclajes() const {
+    return capacidadAnclajes;
+}
+
+int Estacion::getBicisDisponibles() const {
+    return bicisDisponibles;
+}
+
+const ColaEspera& Estacion::getColaEspera() const {
+    return colaEspera;
 }
 // Método para retirar una bicicleta de una estación.
 void Estacion::retirarBicicleta(int dniUsuario)
