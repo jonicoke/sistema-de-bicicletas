@@ -18,8 +18,7 @@ private:
     ColaEspera colaEspera;
 
 public:
-    Estacion();
-    Estacion(const string &codigo, const string &nombre, const string &barrio, int capacidadAnclajes);
+    Estacion(const string &codigo, const string &nombre, const string &barrio, int capacidadAnclajes, int bicisDisponibles);
 
     string getCodigo() const;
     const string &getNombre() const;
@@ -31,15 +30,13 @@ public:
     // Mostrar la información de una estación dado su código. 
     void mostrarInformacion();
     
-    // Listar las bicicletas que tengan más de X km recorridos.
-    // Este método puede estar a nivel global 
-    // void listarBicicletasConXKm(int km);
 
+    bool tieneBajaOcupacion() const;
     // Gestionar la cola de espera de una estación.
     // Retirar una bicicleta de una estación. Si no hay bicicletas disponibles, el usuario se agrega a la cola de espera.
-    void retirarBicicleta(int dniUsuario);
+    bool retirarBicicleta(int dniUsuario);
     // Devolver una bicicleta a una estación. Si hay usuarios en la cola de espera, se le da la bicicleta al primero de la cola. Si no hay usuarios en la cola, se incrementa el contador de bicicletas disponibles.
-    void devolverBicicleta();
+    bool devolverBicicleta(int& dniAsignado);
 };
 
 #endif

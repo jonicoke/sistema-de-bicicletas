@@ -1,13 +1,13 @@
 #include "../header/Estacion.h"
 #include <iostream>
 // Creación del objeto Estacion con valores dados por parámetro.
-Estacion::Estacion(const string &codigo, const string &nombre, const string &barrio, int capacidadAnclajes)
+Estacion::Estacion(const string &codigo, const string &nombre, const string &barrio, int capacidadAnclajes, int bicisDisponibles)
 {
     this->codigo = codigo;
     this->nombre = nombre;
     this->barrio = barrio;
     this->capacidadAnclajes = capacidadAnclajes;
-    this->bicisDisponibles = 0;
+    this->bicisDisponibles = bicisDisponibles;
 }
 void Estacion::mostrarInformacion(){
     cout << "Codigo de estacion : " << codigo << endl;
@@ -41,31 +41,27 @@ int Estacion::getBicisDisponibles() const {
 const ColaEspera& Estacion::getColaEspera() const {
     return colaEspera;
 }
+
+bool Estacion::tieneBajaOcupacion() const {
+    return this->bicisDisponibles * 100 < this->capacidadAnclajes * 20;
+}
 // Método para retirar una bicicleta de una estación.
-void Estacion::retirarBicicleta(int dniUsuario)
-{
-    // Si hay bicicletas disponibles, se retira una y se decrementa el contador
-    if (this->bicisDisponibles > 0) {
-         this->bicisDisponibles--;
-    } else {
-        // Si no hay bicicletas disponibles, el usuario se agrega a la cola de espera
-        this->colaEspera.encolar(dniUsuario);
+bool Estacion::retirarBicicleta(int dniUsuario) {
+    if (bicisDisponibles > 0) {
+        bicisDisponibles--;
+        return true;
     }
+    colaEspera.encolar(dniUsuario);
+    return false;
 }
 // Método para devolver una bicicleta a una estación.
-void Estacion::devolverBicicleta()
-{
-    // Verificamos si hay lugar para devolver la bicicleta
-    if (this->bicisDisponibles >= this->capacidadAnclajes) {
-        return; // No hay lugar para devolver la bicicleta
-    }
-
-    // B.4 Asignar al primero de la cola si hay gente esperando
-    if (!this->colaEspera.estaVacia()) {
-        // Si hay usuarios en la cola, se le da la bicicleta al primero
-        this->colaEspera.desencolar();
+bool Estacion::devolverBicicleta(int& dniAsignado) {
+    dniAsignado = 0;
+    if (colaEspera.estaVacia()) {
+        if (bicisDisponibles >= capacidadAnclajes) return false;
+        bicisDisponibles++;
     } else {
-        // Si no hay usuarios en la cola, incrementa el contador de bicicletas disponibles
-        this->bicisDisponibles++;
+        dniAsignado = colaEspera.desencolar();
     }
+    return true;
 }
