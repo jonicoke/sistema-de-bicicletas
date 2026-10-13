@@ -36,7 +36,9 @@ public:
     Estacion* getEstacionDestino() const;
     int getFecha() const;
     int getDuracionMin() const;
+    bool estaEnRango(int fechaDesde, int fechaHasta) const;
 };
+
 
 #endif
 

@@ -1,8 +1,8 @@
-#ifndef MinHeap_H
-#define MinHeap_H
+#ifndef MINHEAP_H
+#define MINHEAP_H
 
 class MinHeap {
-    // Vacío
+
 };
 
 #endif
