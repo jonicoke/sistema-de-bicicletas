@@ -6,6 +6,20 @@ ColaEspera::ColaEspera() {
     this->primero = nullptr;
     this->ultimo = nullptr;
 }
+ColaEspera::ColaEspera(const ColaEspera& otra) : primero(nullptr), ultimo(nullptr) {
+    for (NodoCola* a = otra.primero; a != nullptr; a = a->siguiente)
+        encolar(a->dniUsuario);
+}
+
+ColaEspera& ColaEspera::operator=(const ColaEspera& otra) {
+    if (this != &otra) {
+        while (!estaVacia()) desencolar();
+        for (NodoCola* a = otra.primero; a != nullptr; a = a->siguiente)
+            encolar(a->dniUsuario);
+    }
+    return *this;
+}
+
 
 // Destructor: para liberar toda la memoria cuando se destruye la cola
 ColaEspera::~ColaEspera() {

@@ -15,7 +15,10 @@ private:
     NodoCola* ultimo;
 
 public:
-    // Constructor vacío para inicializar la cola
+// Constructor de copia y operador de asignación
+    ColaEspera(const ColaEspera& otra);
+    ColaEspera & operator=(const ColaEspera& otra);    
+// Constructor vacío para inicializar la cola
     ColaEspera();
     
     // Destructor (Crucial para liberar memoria y pasar las pruebas de Valgrind)
