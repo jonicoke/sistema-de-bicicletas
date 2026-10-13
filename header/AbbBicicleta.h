@@ -1,8 +1,8 @@
-#ifndef AbbBicicleta_H
-#define AbbBicicleta_H
+#ifndef ABBBICICLETA_H
+#define ABBBICICLETA_H
 
 class AbbBicicleta {
-    // Vacío
+
 };
 
 #endif

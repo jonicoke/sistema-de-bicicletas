@@ -51,3 +51,41 @@ void SistemaBicicletas::eliminarEstacion(const string& codigoEstacion) {
         cout << "Error: No se pudo eliminar. La estacion '" << codigoEstacion << "' no existe." << endl;
     }
 }
+
+ListaViajes SistemaBicicletas::buscarViajesDeUsuario(int dniUsuario) {
+    ListaViajes viajesFiltrados;
+
+    NodoViaje* actual = listaGlobalViajes.getCabeza();
+
+    while (actual != nullptr) {
+        Viaje viajeActual = actual->getViaje();
+
+        if (viajeActual.getDniUsuario() == dniUsuario) {
+            viajesFiltrados.agregarFinal(viajeActual);
+        }
+
+        actual = actual->getSiguiente();
+    }
+
+    return viajesFiltrados;
+}
+
+int SistemaBicicletas::mostrarMinutosPedaleadosDeUsuario(int dniUsuario){
+    int totalMinutos = 0;
+
+    ListaViajes viajes = buscarViajesDeUsuario(dniUsuario);
+
+    NodoViaje* actual = viajes.getCabeza();
+    while(actual != nullptr){
+        totalMinutos += actual->getViaje().getDuracionMin();
+        actual = actual->getSiguiente();
+    }
+
+    cout << "El usuario con DNI : " << dniUsuario << " pedaleo un total de : " << totalMinutos << " minutos." << endl;
+
+    return totalMinutos;
+}
+
+void SistemaBicicletas::registrarViaje(const Viaje& viaje) {
+    listaGlobalViajes.agregarFinal(viaje);
+}
