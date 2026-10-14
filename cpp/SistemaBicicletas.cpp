@@ -176,3 +176,8 @@ void SistemaBicicletas::devolverBicicleta(const string& codigoEstacion) {
         cout << "Bicicleta devuelta. Nadie esperaba." << endl;
     }
 }
+
+
+NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
+    return abbBicicletas->listarConMasDeKm(kilometros);
+}
