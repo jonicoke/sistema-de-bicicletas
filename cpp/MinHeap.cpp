@@ -1,6 +1,7 @@
 #include "../header/MinHeap.h"
 #include <iostream>
 #include <stdexcept>
+#include "../header/Bicicleta.h"
 
 MinHeap::MinHeap(int capacidadInicial) {
     this->capacidad = capacidadInicial;
@@ -34,14 +35,18 @@ void MinHeap::agrandar() {
     capacidad = nuevaCapacidad;
 }
 
-void MinHeap::insertar(int biciId, int prioridad) {
+bool MinHeap::insertar(const Bicicleta& bicicleta) {
+    if (!bicicleta.estaAveriada()) {
+        return false; 
+    }
     if (tamanio == capacidad) {
         agrandar();
     }
-    arreglo[tamanio].biciId = biciId;
-    arreglo[tamanio].prioridad = prioridad;
+    arreglo[tamanio].biciId = bicicleta.getBiciId();
+    arreglo[tamanio].prioridad = calcularPrioridad(bicicleta);
     tamanio++;
     flotar(tamanio - 1);
+    return true;
 }
 
 void MinHeap::flotar(int i) {
@@ -88,9 +93,11 @@ void MinHeap::mostrarHeap() const {
     }
     std::cout << std::endl;
 }
-int MinHeap::calcularPrioridad(bool esElectrica, int kilometros) {
-    if (esElectrica) return 1;
-    if (kilometros > 3000) return 1;
-    if (kilometros > 1500) return 2;
+
+int MinHeap::calcularPrioridad(const Bicicleta& bicicleta) {
+    if (bicicleta.esElectrica()) return 1;
+    int km = bicicleta.getKilometros();
+    if (km > 3000) return 1;
+    if (km > 1500) return 2;
     return 3;
 }

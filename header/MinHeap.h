@@ -1,5 +1,7 @@
 #ifndef MIN_HEAP_H
 #define MIN_HEAP_H
+#include "../header/Bicicleta.h"
+
 struct OrdenTaller {
     int biciId;
     int prioridad;   // 1 = más urgente, 3 = menos urgente
@@ -27,11 +29,11 @@ public:
     MinHeap(const MinHeap&) = delete;
     MinHeap& operator=(const MinHeap&) = delete;
 
-    void insertar(int biciId, int prioridad);
+    bool insertar(const Bicicleta& bicicleta);
     OrdenTaller extraerMasUrgente();
     bool estaVacia() const;
     void mostrarHeap() const;
-    static int calcularPrioridad(bool esElectrica, int kilometros);
+    static int calcularPrioridad(const Bicicleta& bicicleta);
 };
 
 #endif
