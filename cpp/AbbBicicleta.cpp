@@ -1,5 +1,6 @@
 #include "../header/AbbBicicleta.h"
 #include <algorithm>
+#include <iostream>
 
 AbbBicicleta::AbbBicicleta() : raiz(nullptr), cantidad(0) {}
 
@@ -56,7 +57,13 @@ Bicicleta* AbbBicicleta::buscarRec(NodoABB* nodo, int id) const {
 }
 
 Bicicleta* AbbBicicleta::buscar(int bicId) const {
-    return buscarRec(raiz, bicId);
+    Bicicleta* bicicleta = buscarRec(raiz, bicId);
+    if (bicicleta != nullptr) {
+        bicicleta->mostrar();
+    } else {
+        std::cout << "No se encontro la bicicleta con ID " << bicId << "." << std::endl;
+    }
+    return bicicleta;
 }
 
 // ---------- listarInorder ----------
