@@ -41,7 +41,7 @@ void ColaEspera::encolar(int dniUsuario) {
     nuevoNodo->dniUsuario = dniUsuario;
     nuevoNodo->siguiente = nullptr; // Como es el último, le asignamos nullptr al siguiente
 
-    if (estaVacia()) {
+    if (this->estaVacia()) {
         // Si la cola está vacía, este usuario es el primero y también el último
         this->primero = nuevoNodo;
         this->ultimo = nuevoNodo;
@@ -50,7 +50,7 @@ void ColaEspera::encolar(int dniUsuario) {
         this->ultimo->siguiente = nuevoNodo;
         // Y ahora este usuario pasa a ser el último
         this->ultimo = nuevoNodo;
-    }
+    } 
 }
 
 // Desencolar: Se le da la bici al primero de la fila y se retira

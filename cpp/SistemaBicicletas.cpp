@@ -5,7 +5,7 @@ using namespace std;
 
 SistemaBicicletas::SistemaBicicletas(){
     tablaEstaciones = new TablaHash();
-    arbolBicicletas = new AbbBicicleta();
+    abbBicicletas = new AbbBicicleta();
     grafoCiclovias = new Grafo();
     heapTaller = new MinHeap();
 
@@ -14,7 +14,7 @@ SistemaBicicletas::SistemaBicicletas(){
 
 SistemaBicicletas::~SistemaBicicletas() {
     delete tablaEstaciones;
-    delete arbolBicicletas;
+    delete abbBicicletas;
     delete grafoCiclovias;
     delete heapTaller;
     cout << "Memoria del sistema liberada." << endl;
@@ -112,6 +112,7 @@ void SistemaBicicletas::ordenarPorSeleccion(Estacion** arr, int n, bool porCapac
 void SistemaBicicletas::listarEstacionesOrdenadas(bool porCapacidad) {
     int n = 0;
     Estacion** arr = tablaEstaciones->obtenerEstaciones(n);
+    delete[] arr;
     if (n == 0) {
         cout << "No hay estaciones cargadas." << endl;
         return;

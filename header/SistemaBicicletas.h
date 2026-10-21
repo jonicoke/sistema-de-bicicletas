@@ -15,7 +15,6 @@ class SistemaBicicletas
 {
 private:
     TablaHash* tablaEstaciones;
-    AbbBicicleta* arbolBicicletas;
     Grafo* grafoCiclovias;
     MinHeap* heapTaller;
     ListaViajes listaGlobalViajes;
