@@ -10,7 +10,12 @@ private:
 
 public:
     ListaViajes();
+
     ~ListaViajes();
+
+    ListaViajes(const ListaViajes& otra);
+
+    ListaViajes& operator=(const ListaViajes& otra);
 
     void agregarFinal(const Viaje& viaje);
     NodoViaje* getCabeza() const;
