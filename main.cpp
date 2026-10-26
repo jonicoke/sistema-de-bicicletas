@@ -1,21 +1,177 @@
 #include <iostream>
-#include "./header/MinHeap.h"
+#include <fstream>
+#include <string>
+
+// Header del proyecto
+#include "header/SistemaBicicletas.h"
+#include "header/Estacion.h"
+#include "header/Viaje.h"
+
 using namespace std;
 
-int main() {
-    MinHeap heap;
-    Bicicleta b1(101, "PLZ", TipoBici::MECANICA,  EstadoBici::AVERIADA, 1000);  // prio 3
-    Bicicleta b2(102, "PAL", TipoBici::MECANICA,  EstadoBici::AVERIADA, 2000);  // prio 2
-    Bicicleta b3(103, "CAB", TipoBici::ELECTRICA, EstadoBici::AVERIADA, 500);   // prio 1 (electrica)
-    Bicicleta b4(104, "PLZ", TipoBici::MECANICA,  EstadoBici::AVERIADA, 3500);  // prio 1 (km)
-    Bicicleta b5(105, "PLZ", TipoBici::MECANICA,  EstadoBici::OK,       9000);  // no entra
+// Carga de datos
 
-    cout << "b5 (OK) insertada? " << (heap.insertar(b5) ? "si" : "no") << endl;
-    heap.insertar(b1); heap.insertar(b2); heap.insertar(b3); heap.insertar(b4);
+void cargarEstaciones(SistemaBicicletas& sistema) {
+    // ifstream sirve para el manejo de archivos con otras carpetas
+    ifstream archivo("datos/estaciones.txt.txt"); // Le estamos diciendo al sistema que abra de la carpeta datos el archivo estaciones.txt
 
-    while (!heap.estaVacia()) {
-        OrdenTaller o = heap.extraerMasUrgente();
-        cout << "Bici " << o.biciId << " - prioridad " << o.prioridad << endl;
+    if (!archivo.is_open()) { // si no abre el archivo, intentamos abrirlo de nuevo
+        archivo.open("datos/estaciones.txt.txt");
     }
+
+    if (!archivo.is_open()) { // si no abre de nuevo tiramos una advertencia y cortamos el programa
+        cout << "ADVERTENCIA. No se pudo abrir el archivo de estaciones." << endl;
+        return;
+    }
+
+    string codigo,nombre,barrio;
+    int capacidad, bicisDisponibles;
+
+    int cargadas = 0;
+
+    while (archivo >> codigo >> nombre >> barrio >> capacidad >> bicisDisponibles) {
+        // Cramos una instacia de estacion con los datos leidos
+        Estacion estacion(codigo, nombre, barrio, capacidad, bicisDisponibles);
+        // Y lo agreamos al sistema
+        sistema.agregarEstacion(estacion);
+        cargadas++;
+    }
+
+    archivo.close();
+    cout << "Estaciones cargadas correctamente, son un total de : " << cargadas << endl;
+
+}
+
+void cargarViaje(SistemaBicicletas& sistema) {
+    ifstream archivo("datos/viajes.txt.txt");
+
+    if (!archivo.is_open()) {
+        archivo.open("datos/viajes.txt.txt");
+    }
+    if (!archivo.is_open()) {
+        cout << "ADVERTENCIA. No se pudo abrir el archivo de viajes." << endl;
+        return;
+    }
+
+    int idViaje, idBici,dniUsuario, fecha,duracion;
+    string codOrigen, codDestino;
+
+    int cargados = 0;
+
+    while (archivo >> idViaje >> idBici >> dniUsuario >> codOrigen >> codDestino >> fecha >> duracion) {
+        Estacion* estacionOrigen = new Estacion(codOrigen, "", "", 0 , 0);
+        Estacion* estacionDestino = new Estacion(codDestino, "", "", 0 , 0);
+
+        Viaje viaje(idViaje, idBici, dniUsuario,estacionOrigen, estacionDestino, fecha, duracion);
+        sistema.registrarViaje(viaje);
+        cargados++;
+    }
+
+    archivo.close();
+    cout << "Viajes cargadas correctamente, son un total de : " << cargados << endl;
+}
+
+// Interfaz
+
+void mostrarMenu() {
+    cout << "\n==========================================" << endl;
+    cout << "    SISTEMA DE GESTION DE BICICLETAS     " << endl;
+    cout << "==========================================" << endl;
+    cout << " 1. Cargar datos desde archivos (.txt)" << endl;
+    cout << " 2. Buscar viajes de un usuario (por DNI)" << endl;
+    cout << " 3. Consultar minutos pedaleados por DNI" << endl;
+    cout << " 4. Mostrar informacion de una estacion" << endl;
+    cout << " 5. Listar estaciones ordenadas" << endl;
+    cout << " 6. Listar estaciones con baja ocupacion" << endl;
+    cout << " 7. Contar viajes desde estacion entre fechas" << endl;
+    cout << " 0. Salir" << endl;
+    cout << "------------------------------------------" << endl;
+    cout << "Ingrese una opcion: ";
+}
+
+int main() {
+    SistemaBicicletas sistema;
+    int opcion = -1;
+
+    do {
+        mostrarMenu();
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                cout << "Cargando datos iniciales" << endl;
+                cargarEstaciones(sistema);
+                cargarViaje(sistema);
+                break;
+            }
+            case 2: {
+                int dniUsuario;
+                cout << "Ingrese DNI del usuario : ";
+                cin >> dniUsuario;
+
+                ListaViajes viajes = sistema.buscarViajesDeUsuario(dniUsuario);
+                cout << "Se encontraron un total de : " << viajes.getTamanio() << " viaje(s) para el DNI " << dniUsuario << endl;
+
+                NodoViaje* actual = viajes.getCabeza();
+                while (actual != nullptr) {
+                    actual->getViaje().mostrarInformacion();
+                    actual = actual->getSiguiente();
+                }
+                break;
+            }
+            case 3: {
+                int dniUsuario;
+                cout << "Ingrese DNI del usuario : ";
+                cin >> dniUsuario;
+
+                sistema.mostrarMinutosPedaleadosDeUsuario(dniUsuario);
+                break;
+            }
+            case 4: {
+                string codEstacion;
+                cout << "Ingrese codigo de estacion : ";
+                cin >> codEstacion;
+
+                sistema.mostrarInformacionDeEstacion(codEstacion);
+                break;
+            }
+            case 5: {
+                int seleccion;
+                cout << "Listar estaciones ordenadas" << endl;
+                cout << "1. Por capacidad de anclajes" << endl;
+                cin >> seleccion;
+
+                bool porCapacidad = (seleccion == 1);
+                sistema.listarEstacionesOrdenadas(porCapacidad);
+                break;
+            }
+            case 6: {
+                sistema.listarEstacionesConBajaOcupacion();
+                break;
+            }
+            case 7: {
+                string codigo;
+                int fechaDesde, fechaHasta;
+                cout << "Ingrese codigo de estacion: ";
+                cin >> codigo;
+                cout << "Ingrese fecha desde (YYYYMMDD): ";
+                cin >> fechaDesde;
+                cout << "Ingrese fecha hasta (YYYYMMDD): ";
+                cin >> fechaHasta;
+
+                int total = sistema.contarViajesDesdeEstacion(codigo, fechaDesde, fechaHasta);
+                cout << "Total de viajes registrados: " << total << endl;
+                break;
+            }
+            case 0:
+                cout << "Saliendo del sistema... ¡Hasta luego!" << endl;
+                break;
+            default:
+                cout << "Opcion invalida. Intente de nuevo." << endl;
+                break;
+        }
+
+    } while (opcion != 0);
+
     return 0;
 }
