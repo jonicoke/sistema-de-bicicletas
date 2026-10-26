@@ -11,14 +11,14 @@ Viaje::Viaje() {
     this->viajeId = 0;
     this->biciId = 0;
     this->dniUsuario = 0;
-    this->estacionOrigen = nullptr;
-    this->estacionDestino = nullptr;
+    this->estacionOrigen = "";
+    this->estacionDestino = "";
     this->fecha = 0;
     this->duracionMin = 0;
 }
 
 Viaje::Viaje(int viajeId, int biciId, int dniUsuario,
-             Estacion* estacionOrigen, Estacion* estacionDestino,
+             const string& estacionOrigen, const string& estacionDestino,
              int fecha, int duracionMin) {
     this->viajeId = viajeId;
     this->biciId = biciId;
@@ -39,8 +39,8 @@ void Viaje::mostrarInformacion() {
     cout << "Codigo de bici    : " << biciId << endl;
     cout << "DNI del usuario   : " << dniUsuario << endl;
     // Mostramos el código usando el getter de Estación si el puntero no es null
-    cout << "Estacion origen   : " << (estacionOrigen != nullptr ? estacionOrigen->getCodigo() : "N/A") << endl;
-    cout << "Estacion destino  : " << (estacionDestino != nullptr ? estacionDestino->getCodigo() : "N/A") << endl;
+    cout << "Estacion origen   : " << estacionOrigen << endl;
+    cout << "Estacion destino  : " << estacionDestino << endl;
     cout << "Fecha del viaje   : " << fecha << endl;
     cout << "Duracion del viaje: " << duracionMin << " minutos." << endl;
 }
@@ -61,11 +61,11 @@ int Viaje::getDniUsuario() const {
     return dniUsuario;
 }
 
-Estacion* Viaje::getEstacionOrigen() const {
+const string& Viaje::getEstacionOrigen() const {
     return estacionOrigen;
 }
 
-Estacion* Viaje::getEstacionDestino() const {
+const string& Viaje::getEstacionDestino() const {
     return estacionDestino;
 }
 

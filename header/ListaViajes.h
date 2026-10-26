@@ -11,7 +11,7 @@ private:
 public:
     ListaViajes();
     ~ListaViajes();
-
+    
     void agregarFinal(const Viaje& viaje);
     NodoViaje* getCabeza() const;
     int getTamanio() const;

@@ -1,7 +1,6 @@
 #ifndef ABBBICICLETA_H
 #define ABBBICICLETA_H
 
-#include <vector>
 #include "Bicicleta.h"
 #include "NodoLista.h"
 
@@ -23,7 +22,7 @@ private:
     NodoABB* insertarRec(NodoABB* nodo, Bicicleta* nueva, bool& insertado);
     NodoABB* eliminarRec(NodoABB* nodo, int id, bool& eliminado);
     Bicicleta* buscarRec(NodoABB* nodo, int id) const;
-    void inorderRec(NodoABB* nodo, std::vector<Bicicleta*>& resultado) const;
+    void inorderRec(NodoABB* nodo) const;
     int contarAveriadasRec(NodoABB* nodo) const;
     int alturaRec(NodoABB* nodo) const;
     void listarConMasDeKmRec(NodoABB* nodo, int kilometros,
@@ -41,8 +40,8 @@ public:
     int cantidadBicicletas() const;
     bool insertar(const Bicicleta& bici);           // guarda una copia; false si el biciId ya existe
     Bicicleta* buscar(int bicId) const;             // nullptr si no existe
-    std::vector<Bicicleta*> listarInorder() const;  // ordenadas por biciId ascendente
-    int contarAveriadas() const;
+    
+    void listarInorder() const;    int contarAveriadas() const;
     int altura() const;                             // arbol vacio = 0
 
     // Devuelve una lista (ordenada por biciId) con las bicis de mas de 'kilometros' km.
