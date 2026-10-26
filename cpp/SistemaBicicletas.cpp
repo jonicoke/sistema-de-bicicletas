@@ -192,6 +192,3 @@ NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
     return abbBicicletas->listarConMasDeKm(kilometros);
 }
 
-int SistemaBicicletas::contarViajesDesdeEstacion(const string& codigoEstacion, int fechaDesde, int fechaHasta) {
-    return 0; // TODO: implementar
-}
