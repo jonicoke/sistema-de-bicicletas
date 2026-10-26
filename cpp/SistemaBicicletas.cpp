@@ -200,9 +200,47 @@ int SistemaBicicletas::contarViajesDesdeEstacion(const string& codigo, int desde
     return cantidad;
 }
 
-NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
-    return abbBicicletas->listarConMasDeKm(kilometros);
+// NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
+//     return abbBicicletas->listarConMasDeKm(kilometros);
+// }
+// B3: mostrar y liberar
+void SistemaBicicletas::listarBicicletasConXKm(int km) {
+    NodoLista* lista = abbBicicletas->listarConMasDeKm(km);
+    if (lista == nullptr) { cout << "No hay bicicletas con mas de " << km << " km." << endl; return; }
+    for (NodoLista* a = lista; a != nullptr; a = a->sig) a->dato->mostrar();
+    liberarLista(lista);
 }
+// B5: insertar una bicicleta en el taller
+void SistemaBicicletas::enviarBicicletaATaller(int biciId) {
+    Bicicleta* bici = abbBicicletas->buscar(biciId);   // el arbol informa si no existe
+    if (bici == nullptr) return;
+
+    if (heapTaller->insertar(*bici)) {
+        cout << "Bicicleta " << biciId << " enviada al taller con prioridad "
+             << MinHeap::calcularPrioridad(*bici) << "." << endl;
+    } else {
+        cout << "La bicicleta " << biciId << " no esta averiada: no entra al taller." << endl;
+    }
+}
+
+// B5: extraer la bicicleta mas urgente
+void SistemaBicicletas::atenderTaller() {
+    if (heapTaller->estaVacia()) {
+        cout << "El taller no tiene bicicletas pendientes." << endl;
+        return;
+    }
+    OrdenTaller orden = heapTaller->extraerMasUrgente();
+    cout << "Se atiende la bicicleta " << orden.biciId
+         << " (prioridad " << orden.prioridad << ")." << endl;
+}
+//B.2
+void SistemaBicicletas::mostrarViajesDeUsuario(int dniUsuario) {
+    ListaViajes viajes = buscarViajesDeUsuario(dniUsuario);
+
+    if (viajes.estaVacia()) {
+        cout << "El usuario " << dniUsuario << " no tiene viajes registrados." << endl;
+        return;
+    }
 
 void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
     Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
