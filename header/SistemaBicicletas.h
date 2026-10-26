@@ -8,6 +8,7 @@
 #include "MinHeap.h"
 #include "TablaHash.h"
 #include "ListaViajes.h"
+#include "Bicicleta.h"
 
 using namespace std;
 
@@ -43,7 +44,8 @@ public:
     void devolverBicicleta(const string& codigoEstacion);  
     NodoLista* listarBicicletasConXKm(int kilometros);
 
-
+    void agregarBicicleta(int id, const std::string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual = false); // adicionales
+    void agregarCiclovia(const std::string& codigoOrigen, const std::string& codigoDestino); // adicionales
 };
 
 #endif
