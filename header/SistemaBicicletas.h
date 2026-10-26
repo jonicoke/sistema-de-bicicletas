@@ -24,28 +24,28 @@ private:
 
 public:
     SistemaBicicletas();
-    // Destructor para liberar puntero con delete
     ~SistemaBicicletas();
-    //SistemaBicicletas(const TablaHash &tablaEstaciones, const AbbBicicleta &arbolBicicletas, const Grafo &grafoCiclovias, MinHeap* heapTaller);
-
+    SistemaBicicletas(const SistemaBicicletas&) = delete;
+    SistemaBicicletas& operator=(const SistemaBicicletas&) = delete;
     
+    // A
     void agregarEstacion(const Estacion& estacion);
     void eliminarEstacion(const string& codigoEstacion);
     void listarEstacionesOrdenadas(bool porCapacidad); // A.4
     void listarEstacionesConBajaOcupacion(); // A.5
     void mostrarInformacionDeEstacion(const string& codigoEstacion);
     
+    // B
     void registrarViaje(const Viaje& viaje);
     ListaViajes buscarViajesDeUsuario(int dniUsuario);
     int contarViajesDesdeEstacion(const string& codigoEstacion, int fechaDesde, int fechaHasta); // B.1
-    int mostrarMinutosPedaleadosDeUsuario(int dniUsuario);
-    
-    void listarBicicletasConXKm(int kilometros);
-    void retirarBicicleta(const string& codigoEstacion, int dniUsuario);                        // B.4
-    void devolverBicicleta(const string& codigoEstacion);  
-    // NodoLista* listarBicicletasConXKm(int kilometros);
-    void listarBicicletasConXKm(int kilometros);
-
+    void mostrarViajesDeUsuario(int dniUsuario);            // B.2
+    int mostrarMinutosPedaleadosDeUsuario(int dniUsuario);  // B.2
+    void listarBicicletasConXKm(int kilometros);            // B.3
+    void retirarBicicleta(const string& codigoEstacion, int dniUsuario); // B.4
+    void devolverBicicleta(const string& codigoEstacion);               //B.4  
+    void enviarBicicletaATaller(int biciId); //B.5
+    void atenderTaller();                   // B.5
 
 };
 
