@@ -53,19 +53,22 @@ void cargarViaje(SistemaBicicletas& sistema) {
         return;
     }
 
-    int idViaje, idBici, dniUsuario, fecha, duracion;
+    int idViaje, idBici,dniUsuario, fecha,duracion;
     string codOrigen, codDestino;
 
     int cargados = 0;
 
     while (archivo >> idViaje >> idBici >> dniUsuario >> codOrigen >> codDestino >> fecha >> duracion) {
-        Viaje viaje(idViaje, idBici, dniUsuario, codOrigen, codDestino, fecha, duracion);
+        Estacion* estacionOrigen = new Estacion(codOrigen, "", "", 0 , 0);
+        Estacion* estacionDestino = new Estacion(codDestino, "", "", 0 , 0);
+
+        Viaje viaje(idViaje, idBici, dniUsuario,estacionOrigen, estacionDestino, fecha, duracion);
         sistema.registrarViaje(viaje);
         cargados++;
     }
 
     archivo.close();
-    cout << "Viajes cargados correctamente, son un total de : " << cargados << endl;
+    cout << "Viajes cargadas correctamente, son un total de : " << cargados << endl;
 }
 
 // Interfaz

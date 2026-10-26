@@ -28,20 +28,23 @@ public:
     ~SistemaBicicletas();
     //SistemaBicicletas(const TablaHash &tablaEstaciones, const AbbBicicleta &arbolBicicletas, const Grafo &grafoCiclovias, MinHeap* heapTaller);
 
-    void mostrarInformacionDeEstacion(const string& codigoEstacion);
-    ListaViajes buscarViajesDeUsuario(int dniUsuario);
-    int mostrarMinutosPedaleadosDeUsuario(int dniUsuario);
+    
     void agregarEstacion(const Estacion& estacion);
     void eliminarEstacion(const string& codigoEstacion);
-    void registrarViaje(const Viaje& viaje);
-
     void listarEstacionesOrdenadas(bool porCapacidad); // A.4
     void listarEstacionesConBajaOcupacion(); // A.5
-
+    void mostrarInformacionDeEstacion(const string& codigoEstacion);
+    
+    void registrarViaje(const Viaje& viaje);
+    ListaViajes buscarViajesDeUsuario(int dniUsuario);
     int contarViajesDesdeEstacion(const string& codigoEstacion, int fechaDesde, int fechaHasta); // B.1
+    int mostrarMinutosPedaleadosDeUsuario(int dniUsuario);
+    
+    void listarBicicletasConXKm(int kilometros);
     void retirarBicicleta(const string& codigoEstacion, int dniUsuario);                        // B.4
     void devolverBicicleta(const string& codigoEstacion);  
-    NodoLista* listarBicicletasConXKm(int kilometros);
+    // NodoLista* listarBicicletasConXKm(int kilometros);
+    void listarBicicletasConXKm(int kilometros);
 
 
 };

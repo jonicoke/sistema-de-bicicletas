@@ -41,7 +41,8 @@ public:
     bool insertar(const Bicicleta& bici);           // guarda una copia; false si el biciId ya existe
     Bicicleta* buscar(int bicId) const;             // nullptr si no existe
     
-    void listarInorder() const;    int contarAveriadas() const;
+    void listarInorder() const;    
+    int contarAveriadas() const;
     int altura() const;                             // arbol vacio = 0
 
     // Devuelve una lista (ordenada por biciId) con las bicis de mas de 'kilometros' km.
