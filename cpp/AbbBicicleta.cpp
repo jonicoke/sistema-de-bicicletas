@@ -67,17 +67,27 @@ Bicicleta* AbbBicicleta::buscar(int bicId) const {
 }
 
 // ---------- listarInorder ----------
-void AbbBicicleta::inorderRec(NodoABB* nodo, std::vector<Bicicleta*>& resultado) const {
-    if (nodo == nullptr) return;
-    inorderRec(nodo->izq, resultado);
-    resultado.push_back(nodo->dato);
-    inorderRec(nodo->der, resultado);
-}
+// void AbbBicicleta::inorderRec(NodoABB* nodo, std::vector<Bicicleta*>& resultado) const {
+//     if (nodo == nullptr) return;
+//     inorderRec(nodo->izq, resultado);
+//     resultado.push_back(nodo->dato);
+//     inorderRec(nodo->der, resultado);
+// }
 
-std::vector<Bicicleta*> AbbBicicleta::listarInorder() const {
-    std::vector<Bicicleta*> resultado;
-    inorderRec(raiz, resultado);
-    return resultado;
+// std::vector<Bicicleta*> AbbBicicleta::listarInorder() const {
+//     std::vector<Bicicleta*> resultado;
+//     inorderRec(raiz, resultado);
+//     return resultado;
+// }
+void AbbBicicleta::inorderRec(NodoABB* nodo) const {
+    if (nodo == nullptr) return;
+    inorderRec(nodo->izq);
+    nodo->dato->mostrar();
+    inorderRec(nodo->der);
+}
+void AbbBicicleta::listarInorder() const {
+    if (raiz == nullptr) { std::cout << "No hay bicicletas cargadas." << std::endl; return; }
+    inorderRec(raiz);
 }
 
 // ---------- contarAveriadas ----------

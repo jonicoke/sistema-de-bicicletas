@@ -1,9 +1,7 @@
 #ifndef VIAJE_H
 #define VIAJE_H
 
-#include <cstddef>
 #include <string>
-#include "Estacion.h"
 
 
 using namespace std;
@@ -14,26 +12,24 @@ private:
     int viajeId;
     int biciId;
     int dniUsuario;
-    Estacion* estacionOrigen;
-    Estacion* estacionDestino;
+    std::string estacionOrigen;
+    std::string estacionDestino;
     int fecha;
     int duracionMin;
 
 public:
     Viaje();
     Viaje(int viajeId, int biciId, int dniUsuario,
-          Estacion* estacionOrigen, Estacion* estacionDestino,
+          const std::string& estacionOrigen, const std::string&  estacionDestino,
           int fecha, int duracionMin);
 
-    ~Viaje();
-
-    void mostrarInformacion();
+    void mostrarInformacion() const;
 
     int getViajeId() const;
     int getBiciId() const;
     int getDniUsuario() const;
-    Estacion* getEstacionOrigen() const;
-    Estacion* getEstacionDestino() const;
+    const std::string&  getEstacionOrigen() const;
+    const std::string&  getEstacionDestino() const;
     int getFecha() const;
     int getDuracionMin() const;
     bool estaEnRango(int fechaDesde, int fechaHasta) const;

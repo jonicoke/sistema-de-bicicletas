@@ -1,5 +1,4 @@
 #include "../header/Viaje.h"
-#include "../header/Estacion.h"
 #include <iostream>
 // DATO INTERESANTE SOBRE CONST EN METODOS
 //Adelante (const Estacion*): Protege a la Estación. Quien reciba el puntero solo va a poder leer datos, sin modificar la estación original.
@@ -11,14 +10,14 @@ Viaje::Viaje() {
     this->viajeId = 0;
     this->biciId = 0;
     this->dniUsuario = 0;
-    this->estacionOrigen = nullptr;
-    this->estacionDestino = nullptr;
+    this->estacionOrigen = "";
+    this->estacionDestino = "";
     this->fecha = 0;
     this->duracionMin = 0;
 }
 
 Viaje::Viaje(int viajeId, int biciId, int dniUsuario,
-             Estacion* estacionOrigen, Estacion* estacionDestino,
+             const string& estacionOrigen, const string& estacionDestino,
              int fecha, int duracionMin) {
     this->viajeId = viajeId;
     this->biciId = biciId;
@@ -29,18 +28,14 @@ Viaje::Viaje(int viajeId, int biciId, int dniUsuario,
     this->duracionMin = duracionMin;
 }
 
-Viaje::~Viaje() {
-// Queda vacío intencionalmente.
-// No se libera memoria de estacionOrigen ni estacionDestino
-// porque su ciclo de vida lo maneja la TablaHash.
-}
-void Viaje::mostrarInformacion() {
+
+void Viaje::mostrarInformacion() const {
     cout << "Codigo de viaje   : " << viajeId << endl;
     cout << "Codigo de bici    : " << biciId << endl;
     cout << "DNI del usuario   : " << dniUsuario << endl;
     // Mostramos el código usando el getter de Estación si el puntero no es null
-    cout << "Estacion origen   : " << (estacionOrigen != nullptr ? estacionOrigen->getCodigo() : "N/A") << endl;
-    cout << "Estacion destino  : " << (estacionDestino != nullptr ? estacionDestino->getCodigo() : "N/A") << endl;
+    cout << "Estacion origen   : " << estacionOrigen << endl;
+    cout << "Estacion destino  : " << estacionDestino << endl;
     cout << "Fecha del viaje   : " << fecha << endl;
     cout << "Duracion del viaje: " << duracionMin << " minutos." << endl;
 }
@@ -61,11 +56,11 @@ int Viaje::getDniUsuario() const {
     return dniUsuario;
 }
 
-Estacion* Viaje::getEstacionOrigen() const {
+const string& Viaje::getEstacionOrigen() const {
     return estacionOrigen;
 }
 
-Estacion* Viaje::getEstacionDestino() const {
+const string& Viaje::getEstacionDestino() const {
     return estacionDestino;
 }
 

@@ -112,7 +112,6 @@ void SistemaBicicletas::ordenarPorSeleccion(Estacion** arr, int n, bool porCapac
 void SistemaBicicletas::listarEstacionesOrdenadas(bool porCapacidad) {
     int n = 0;
     Estacion** arr = tablaEstaciones->obtenerEstaciones(n);
-    delete[] arr;
     if (n == 0) {
         cout << "No hay estaciones cargadas." << endl;
         return;
@@ -177,7 +176,17 @@ void SistemaBicicletas::devolverBicicleta(const string& codigoEstacion) {
         cout << "Bicicleta devuelta. Nadie esperaba." << endl;
     }
 }
-
+// B1
+int SistemaBicicletas::contarViajesDesdeEstacion(const string& codigo, int desde, int hasta) {
+    if (desde > hasta) { cout << "Rango de fechas invalido." << endl; return 0; }
+    int cantidad = 0;
+    for (NodoViaje* a = listaGlobalViajes.getCabeza(); a != nullptr; a = a->getSiguiente()) {
+        Viaje v = a->getViaje();
+        if (v.getEstacionOrigen() == codigo && v.estaEnRango(desde, hasta)) cantidad++;
+    }
+    cout << "Viajes desde " << codigo << " entre " << desde << " y " << hasta << ": " << cantidad << endl;
+    return cantidad;
+}
 
 NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
     return abbBicicletas->listarConMasDeKm(kilometros);
