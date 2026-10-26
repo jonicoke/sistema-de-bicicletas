@@ -1,5 +1,4 @@
 #include "../header/Viaje.h"
-#include "../header/Estacion.h"
 #include <iostream>
 // DATO INTERESANTE SOBRE CONST EN METODOS
 //Adelante (const Estacion*): Protege a la Estación. Quien reciba el puntero solo va a poder leer datos, sin modificar la estación original.
@@ -29,12 +28,8 @@ Viaje::Viaje(int viajeId, int biciId, int dniUsuario,
     this->duracionMin = duracionMin;
 }
 
-Viaje::~Viaje() {
-// Queda vacío intencionalmente.
-// No se libera memoria de estacionOrigen ni estacionDestino
-// porque su ciclo de vida lo maneja la TablaHash.
-}
-void Viaje::mostrarInformacion() {
+
+void Viaje::mostrarInformacion() const {
     cout << "Codigo de viaje   : " << viajeId << endl;
     cout << "Codigo de bici    : " << biciId << endl;
     cout << "DNI del usuario   : " << dniUsuario << endl;

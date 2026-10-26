@@ -1,9 +1,7 @@
 #ifndef VIAJE_H
 #define VIAJE_H
 
-#include <cstddef>
 #include <string>
-#include "Estacion.h"
 
 
 using namespace std;
@@ -25,9 +23,7 @@ public:
           const std::string& estacionOrigen, const std::string&  estacionDestino,
           int fecha, int duracionMin);
 
-    ~Viaje();
-
-    void mostrarInformacion();
+    void mostrarInformacion() const;
 
     int getViajeId() const;
     int getBiciId() const;
