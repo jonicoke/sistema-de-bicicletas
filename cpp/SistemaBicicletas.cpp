@@ -188,6 +188,13 @@ int SistemaBicicletas::contarViajesDesdeEstacion(const string& codigo, int desde
     return cantidad;
 }
 
-NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
-    return abbBicicletas->listarConMasDeKm(kilometros);
+// NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
+//     return abbBicicletas->listarConMasDeKm(kilometros);
+// }
+// B3: mostrar y liberar
+void SistemaBicicletas::listarBicicletasConXKm(int km) {
+    NodoLista* lista = abbBicicletas->listarConMasDeKm(km);
+    if (lista == nullptr) { cout << "No hay bicicletas con mas de " << km << " km." << endl; return; }
+    for (NodoLista* a = lista; a != nullptr; a = a->sig) a->dato->mostrar();
+    liberarLista(lista);
 }

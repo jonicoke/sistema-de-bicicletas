@@ -41,7 +41,8 @@ public:
     int contarViajesDesdeEstacion(const string& codigoEstacion, int fechaDesde, int fechaHasta); // B.1
     void retirarBicicleta(const string& codigoEstacion, int dniUsuario);                        // B.4
     void devolverBicicleta(const string& codigoEstacion);  
-    NodoLista* listarBicicletasConXKm(int kilometros);
+    // NodoLista* listarBicicletasConXKm(int kilometros);
+    void listarBicicletasConXKm(int kilometros);
 };
 
 #endif
