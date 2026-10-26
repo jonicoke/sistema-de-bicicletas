@@ -87,7 +87,19 @@ int SistemaBicicletas::mostrarMinutosPedaleadosDeUsuario(int dniUsuario){
 }
 
 void SistemaBicicletas::registrarViaje(const Viaje& viaje) {
+    // Recorremos la lista global para validar que no exista el idViaje
+    NodoViaje* actual = listaGlobalViajes.getCabeza();
+    while (actual != nullptr) {
+        if (actual->getViaje().getViajeId() == viaje.getViajeId()) {
+            cout << "Error: El viaje con ID " << viaje.getViajeId() << " ya esta registrado." << endl;
+            return;
+        }
+        actual = actual->getSiguiente();
+    }
+
+    // Si no existía previamente, lo agregamos al final
     listaGlobalViajes.agregarFinal(viaje);
+    cout << "Viaje ID " << viaje.getViajeId() << " registrado con exito." << endl;
 }
 
 // 13/10
@@ -230,8 +242,37 @@ void SistemaBicicletas::mostrarViajesDeUsuario(int dniUsuario) {
         return;
     }
 
-    for (NodoViaje* actual = viajes.getCabeza(); actual != nullptr; actual = actual->getSiguiente()) {
-        actual->getViaje().mostrarInformacion();
-        cout << "---" << endl;
+void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
+    Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
+    bool insertado = abbBicicletas->insertar(nuevaBici);
+
+    if (insertado) {
+        cout << "Bicicleta " << id << " agregada con exito al ABB." << endl;
+
+        // Solo incrementamos las bicis disponibles si el registro fue manual
+        if (esManual) {
+            Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
+            if (estacion != nullptr) {
+                estacion->setBicisDisponibles(estacion->getBicisDisponibles() + 1);
+                cout << "Bicicletas disponibles en " << codigoEstacion << " actualizadas a: "
+                     << estacion->getBicisDisponibles() << endl;
+            } else {
+                cout << "[ADVERTENCIA] La estacion " << codigoEstacion << " no existe en el sistema." << endl;
+            }
+        }
+
+    } else {
+        cout << "Error: La bicicleta con ID " << id << " ya existe en el sistema." << endl;
     }
 }
+
+void SistemaBicicletas::agregarCiclovia(const string& codigoOrigen, const string& codigoDestino) {
+    bool agregada = grafoCiclovias->agregarCiclovia(codigoOrigen, codigoDestino);
+
+    if (agregada) {
+        cout << "Ciclovia entre " << codigoOrigen << " y " << codigoDestino << " agregada con exito al Grafo." << endl;
+    } else {
+        cout << "Error: No se pudo agregar la ciclovia entre " << codigoOrigen << " y " << codigoDestino << "." << endl;
+    }
+}
+

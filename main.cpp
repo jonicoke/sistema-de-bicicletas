@@ -11,6 +11,8 @@ using namespace std;
 
 // Carga de datos
 
+
+
 void cargarEstaciones(SistemaBicicletas& sistema) {
     // ifstream sirve para el manejo de archivos con otras carpetas
     ifstream archivo("datos/estaciones.txt.txt"); // Le estamos diciendo al sistema que abra de la carpeta datos el archivo estaciones.txt
@@ -71,6 +73,59 @@ void cargarViaje(SistemaBicicletas& sistema) {
     cout << "Viajes cargadas correctamente, son un total de : " << cargados << endl;
 }
 
+
+void cargarBicicletas(SistemaBicicletas& sistema) {
+    ifstream archivo("datos/bicicletas.txt.txt");
+    if (!archivo.is_open()) {
+        archivo.open("datos/bicicletas.txt");
+    }
+
+    if (!archivo.is_open()) {
+        cout << "ADVERTENCIA. No se pudo abrir el archivo de bicicletas." << endl;
+        return;
+    }
+
+    int id, km;
+    string codEstacion, strTipo, strEstado;
+    int cargadas = 0;
+
+    // Formato del txt: 100 CAB Electrica OK 1000
+    while (archivo >> id >> codEstacion >> strTipo >> strEstado >> km) {
+        TipoBici tipo = (strTipo == "Electrica") ? TipoBici::ELECTRICA : TipoBici::MECANICA;
+        EstadoBici estado = (strEstado == "OK") ? EstadoBici::OK : EstadoBici::AVERIADA;
+
+        sistema.agregarBicicleta(id, codEstacion, tipo, estado, km);
+        cargadas++;
+    }
+
+    archivo.close();
+    cout << "Bicicletas cargadas correctamente, son un total de : " << cargadas << endl;
+}
+
+void cargarCiclovias(SistemaBicicletas& sistema) {
+    ifstream archivo("datos/ciclovias.txt.txt");
+    if (!archivo.is_open()) {
+        archivo.open("datos/ciclovias.txt");
+    }
+
+    if (!archivo.is_open()) {
+        cout << "ADVERTENCIA. No se pudo abrir el archivo de ciclovias." << endl;
+        return;
+    }
+
+    string codOrigen, codDestino;
+    int cargadas = 0;
+
+    // Formato del txt: CAB MON
+    while (archivo >> codOrigen >> codDestino) {
+        sistema.agregarCiclovia(codOrigen, codDestino);
+        cargadas++;
+    }
+
+    archivo.close();
+    cout << "Ciclovias cargadas correctamente, son un total de : " << cargadas << endl;
+}
+
 // Interfaz
 
 void mostrarMenu() {
@@ -86,6 +141,11 @@ void mostrarMenu() {
     cout << " 7. Retirar bicicleta (Gestion de Cola)" << endl;
     cout << " 8. Devolver bicicleta" << endl;
     cout << " 9. Contar viajes desde estacion entre fechas" << endl;
+    cout << "10. Consultar bicicletas con mas de X Km (ABB)" << endl;
+    cout << "11. Registrar bicicleta manualmente (ABB)" << endl;
+    cout << "12. Agregar tramo de ciclovia manualmente (Grafo)" << endl;
+    cout << "13. Registrar viaje manualmente (Lista)" << endl;
+    cout << "14. Agregar estacion manualmente (Tabla Hash)" << endl;
     cout << " 0. Salir" << endl;
     cout << "------------------------------------------" << endl;
     cout << "Ingrese una opcion: ";
@@ -104,6 +164,8 @@ int main() {
                 cout << "\n--- CARGANDO DATOS INICIALES ---" << endl;
                 cargarEstaciones(sistema);
                 cargarViaje(sistema);
+                cargarBicicletas(sistema);
+                cargarCiclovias(sistema);
                 break;
             }
             case 2: {
@@ -184,6 +246,102 @@ int main() {
                 cin >> fechaHasta;
 
                 sistema.contarViajesDesdeEstacion(codigo, fechaDesde, fechaHasta);
+                break;
+            }
+            case 10: {
+                int km;
+                cout << "\n--- CONSULTAR BICICLETAS POR KILOMETRAJE (ABB) ---" << endl;
+                cout << "Ingrese la cantidad minima de kilometros: ";
+                cin >> km;
+
+                NodoLista* listaBicis = sistema.listarBicicletasConXKm(km);
+
+                if (listaBicis == nullptr) {
+                    cout << "No se encontraron bicicletas con mas de " << km << " km recorridos." << endl;
+                } else {
+                    cout << "\nBicicletas encontradas:" << endl;
+                    cout << "------------------------------------------" << endl;
+                    NodoLista* actual = listaBicis;
+                    while (actual != nullptr) {
+                        actual->dato->mostrar();
+                        cout << "------------------------------------------" << endl;
+                        actual = actual->sig;
+                    }
+
+                    // Liberamos los nodos temporales creados por la funcion del ABB
+                    while (listaBicis != nullptr) {
+                        NodoLista* aux = listaBicis;
+                        listaBicis = listaBicis->sig;
+                        delete aux;
+                    }
+                }
+                break;
+            }
+            case 11: {
+                int id, km, optTipo, optEstado;
+                string codEstacion;
+
+                cout << "\n--- REGISTRAR BICICLETA MANUALLY (ABB) ---" << endl;
+                cout << "ID de la Bicicleta (int): ";
+                cin >> id;
+                cout << "Codigo de Estacion actual (ej: CAB): ";
+                cin >> codEstacion;
+                cout << "Tipo (1. Electrica / 2. Mecanica): ";
+                cin >> optTipo;
+                cout << "Estado (1. OK / 2. AVERIADA): ";
+                cin >> optEstado;
+                cout << "Kilometros recorridos: ";
+                cin >> km;
+
+                TipoBici tipo = (optTipo == 1) ? TipoBici::ELECTRICA : TipoBici::MECANICA;
+                EstadoBici estado = (optEstado == 1) ? EstadoBici::OK : EstadoBici::AVERIADA;
+
+                // Pasamos 'true' para que se sume a las bicicletas disponibles de la estacion
+                sistema.agregarBicicleta(id, codEstacion, tipo, estado, km, true);
+                break;
+            }
+            case 12: {
+                string codOrigen, codDestino;
+
+                cout << "\n--- AGREGAR TRAMO DE CICLOVIA MANUALLY (GRAFO) ---" << endl;
+                cout << "Codigo Estacion Origen (ej: CAB): ";
+                cin >> codOrigen;
+                cout << "Codigo Estacion Destino (ej: MON): ";
+                cin >> codDestino;
+
+                sistema.agregarCiclovia(codOrigen, codDestino);
+                break;
+            }
+            case 13: {
+                int idViaje, idBici, dniUsuario, fecha, duracion;
+                string codOrigen, codDestino;
+
+                cout << "\n--- REGISTRAR VIAJE MANUALLY ---" << endl;
+                cout << "ID del Viaje: "; cin >> idViaje;
+                cout << "ID de la Bicicleta: "; cin >> idBici;
+                cout << "DNI del Usuario: "; cin >> dniUsuario;
+                cout << "Codigo Estacion Origen (ej: CAB): "; cin >> codOrigen;
+                cout << "Codigo Estacion Destino (ej: MON): "; cin >> codDestino;
+                cout << "Fecha (YYYYMMDD): "; cin >> fecha;
+                cout << "Duracion (minutos): "; cin >> duracion;
+
+                Viaje nuevoViaje(idViaje, idBici, dniUsuario, codOrigen, codDestino, fecha, duracion);
+                sistema.registrarViaje(nuevoViaje);
+                break;
+            }
+            case 14: {
+                string codigo, nombre, barrio;
+                int capacidad, bicisDisponibles;
+
+                cout << "\n--- AGREGAR ESTACION MANUALLY ---" << endl;
+                cout << "Codigo de Estacion (ej: PAL): "; cin >> codigo;
+                cout << "Nombre de Estacion: "; cin >> nombre;
+                cout << "Barrio: "; cin >> barrio;
+                cout << "Capacidad de Anclajes: "; cin >> capacidad;
+                cout << "Bicicletas Disponibles: "; cin >> bicisDisponibles;
+
+                Estacion nuevaEstacion(codigo, nombre, barrio, capacidad, bicisDisponibles);
+                sistema.agregarEstacion(nuevaEstacion);
                 break;
             }
             case 0:

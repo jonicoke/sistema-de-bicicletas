@@ -25,6 +25,7 @@ public:
     const string &getBarrio() const;
     int getCapacidadAnclajes() const;
     int getBicisDisponibles() const;
+    void setBicisDisponibles(int num);
     const ColaEspera &getColaEspera() const;
 
     // Mostrar la información de una estación dado su código. 

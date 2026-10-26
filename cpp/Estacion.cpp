@@ -38,6 +38,10 @@ int Estacion::getBicisDisponibles() const {
     return bicisDisponibles;
 }
 
+void Estacion::setBicisDisponibles(int num) {
+    this->bicisDisponibles = num;
+}
+
 const ColaEspera& Estacion::getColaEspera() const {
     return colaEspera;
 }

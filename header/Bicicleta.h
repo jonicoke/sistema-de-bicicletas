@@ -3,8 +3,15 @@
 
 #include <string>
 
-enum class TipoBici { MECANICA, ELECTRICA };
-enum class EstadoBici { OK, AVERIADA };
+enum class TipoBici {
+    ELECTRICA,
+    MECANICA
+};
+
+enum class EstadoBici {
+    OK,
+    AVERIADA
+};
 
 class Bicicleta {
 private:
