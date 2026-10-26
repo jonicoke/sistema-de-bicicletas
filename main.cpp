@@ -83,7 +83,9 @@ void mostrarMenu() {
     cout << " 4. Mostrar informacion de una estacion" << endl;
     cout << " 5. Listar estaciones ordenadas" << endl;
     cout << " 6. Listar estaciones con baja ocupacion" << endl;
-    cout << " 7. Contar viajes desde estacion entre fechas" << endl;
+    cout << " 7. Retirar bicicleta (Gestion de Cola)" << endl;
+    cout << " 8. Devolver bicicleta" << endl;
+    cout << " 9. Contar viajes desde estacion entre fechas" << endl;
     cout << " 0. Salir" << endl;
     cout << "------------------------------------------" << endl;
     cout << "Ingrese una opcion: ";
@@ -99,18 +101,18 @@ int main() {
 
         switch (opcion) {
             case 1: {
-                cout << "Cargando datos iniciales" << endl;
+                cout << "\n--- CARGANDO DATOS INICIALES ---" << endl;
                 cargarEstaciones(sistema);
                 cargarViaje(sistema);
                 break;
             }
             case 2: {
                 int dniUsuario;
-                cout << "Ingrese DNI del usuario : ";
+                cout << "\nIngrese DNI del usuario: ";
                 cin >> dniUsuario;
 
                 ListaViajes viajes = sistema.buscarViajesDeUsuario(dniUsuario);
-                cout << "Se encontraron un total de : " << viajes.getTamanio() << " viaje(s) para el DNI " << dniUsuario << endl;
+                cout << "Se encontraron " << viajes.getTamanio() << " viaje(s) para el DNI " << dniUsuario << endl;
 
                 NodoViaje* actual = viajes.getCabeza();
                 while (actual != nullptr) {
@@ -121,7 +123,7 @@ int main() {
             }
             case 3: {
                 int dniUsuario;
-                cout << "Ingrese DNI del usuario : ";
+                cout << "\nIngrese DNI del usuario: ";
                 cin >> dniUsuario;
 
                 sistema.mostrarMinutosPedaleadosDeUsuario(dniUsuario);
@@ -129,7 +131,7 @@ int main() {
             }
             case 4: {
                 string codEstacion;
-                cout << "Ingrese codigo de estacion : ";
+                cout << "\nIngrese codigo de estacion: ";
                 cin >> codEstacion;
 
                 sistema.mostrarInformacionDeEstacion(codEstacion);
@@ -137,8 +139,10 @@ int main() {
             }
             case 5: {
                 int seleccion;
-                cout << "Listar estaciones ordenadas" << endl;
+                cout << "\n--- LISTAR ESTACIONES ORDENADAS ---" << endl;
                 cout << "1. Por capacidad de anclajes" << endl;
+                cout << "2. Por bicicletas disponibles" << endl;
+                cout << "Seleccione una opcion: ";
                 cin >> seleccion;
 
                 bool porCapacidad = (seleccion == 1);
@@ -146,28 +150,47 @@ int main() {
                 break;
             }
             case 6: {
+                cout << "\n--- ESTACIONES CON BAJA OCUPACION (<20%) ---" << endl;
                 sistema.listarEstacionesConBajaOcupacion();
                 break;
             }
             case 7: {
+                string cod;
+                int dni;
+                cout << "\n--- RETIRAR BICICLETA ---" << endl;
+                cout << "Codigo de estacion: "; cin >> cod;
+                cout << "DNI del usuario: "; cin >> dni;
+
+                sistema.retirarBicicleta(cod, dni);
+                break;
+            }
+            case 8: {
+                string cod;
+                cout << "\n--- DEVOLVER BICICLETA ---" << endl;
+                cout << "Codigo de estacion: "; cin >> cod;
+
+                sistema.devolverBicicleta(cod);
+                break;
+            }
+            case 9: {
                 string codigo;
                 int fechaDesde, fechaHasta;
-                cout << "Ingrese codigo de estacion: ";
+                cout << "\n--- CONTAR VIAJES ENTRE FECHAS ---" << endl;
+                cout << "Codigo de estacion: ";
                 cin >> codigo;
-                cout << "Ingrese fecha desde (YYYYMMDD): ";
+                cout << "Fecha desde (YYYYMMDD): ";
                 cin >> fechaDesde;
-                cout << "Ingrese fecha hasta (YYYYMMDD): ";
+                cout << "Fecha hasta (YYYYMMDD): ";
                 cin >> fechaHasta;
 
-                int total = sistema.contarViajesDesdeEstacion(codigo, fechaDesde, fechaHasta);
-                cout << "Total de viajes registrados: " << total << endl;
+                sistema.contarViajesDesdeEstacion(codigo, fechaDesde, fechaHasta);
                 break;
             }
             case 0:
-                cout << "Saliendo del sistema... ¡Hasta luego!" << endl;
+                cout << "\nSaliendo del sistema... ¡Hasta luego!" << endl;
                 break;
             default:
-                cout << "Opcion invalida. Intente de nuevo." << endl;
+                cout << "\nOpcion invalida. Intente de nuevo." << endl;
                 break;
         }
 
