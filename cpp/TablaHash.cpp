@@ -84,7 +84,7 @@ bool TablaHash::eliminar(const string& codigo) {
 
 int TablaHash::getCantidad() const { return cantidad; }
 int TablaHash::getColisiones() const { return colisiones; }
-
+int TablaHash::getTamanioTabla() const { return tamanioTabla; }
 double TablaHash::getFactorCarga() const {
     return static_cast<double>(cantidad) / tamanioTabla;
 }

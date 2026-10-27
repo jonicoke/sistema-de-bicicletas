@@ -7,9 +7,11 @@ Grafo::Grafo(int capacidadInicial) {
     this->capacidad = capacidadInicial;
     this->cantidadVertices = 0;
     this->codigos = new string[capacidad];
+    this->activo = new bool[capacidad];
     this->adyacencia = new NodoAdyacente*[capacidad];
     for (int i = 0; i < capacidad; i++) {
         adyacencia[i] = nullptr;
+        activo[i] = false;
     }
 }
 
@@ -23,12 +25,13 @@ Grafo::~Grafo() {
         }
     }
     delete[] adyacencia;
+    delete[] activo;
     delete[] codigos;
 }
-
+// Solo encuentra vertices activos: uno eliminado "no existe"
 int Grafo::indiceDe(const string& codigo) const {
     for (int i = 0; i < cantidadVertices; i++) {
-        if (codigos[i] == codigo) return i;
+        if (activo[i] && codigos[i] == codigo) return i;
     }
     return -1;
 }
@@ -36,29 +39,43 @@ int Grafo::indiceDe(const string& codigo) const {
 void Grafo::agrandar() {
     int nuevaCapacidad = capacidad * 2;
     string* nuevosCodigos = new string[nuevaCapacidad];
+    bool* nuevoActivo = new bool[nuevaCapacidad];
     NodoAdyacente** nuevaAdy = new NodoAdyacente*[nuevaCapacidad];
 
     for (int i = 0; i < nuevaCapacidad; i++) {
         nuevaAdy[i] = nullptr;
+        nuevoActivo[i] = false;
     }
     for (int i = 0; i < cantidadVertices; i++) {
         nuevosCodigos[i] = codigos[i];
+        nuevoActivo[i] = activo[i];
         nuevaAdy[i] = adyacencia[i];     // se mueven los punteros, los nodos no se copian
     }
     delete[] codigos;
+    delete[] activo;
     delete[] adyacencia;
     codigos = nuevosCodigos;
+    activo = nuevoActivo;
     adyacencia = nuevaAdy;
     capacidad = nuevaCapacidad;
 }
 
 bool Grafo::agregarVertice(const string& codigo) {
     if (indiceDe(codigo) != -1) return false;
+
+// Si la estacion fue eliminada antes, se reutiliza su lugar
+    for (int i = 0; i < cantidadVertices; i++) {
+        if (!activo[i] && codigos[i] == codigo) {
+            activo[i] = true;
+            return true;
+        }
+    }
     if (cantidadVertices == capacidad) agrandar();
-    codigos[cantidadVertices] = codigo;
-    adyacencia[cantidadVertices] = nullptr;
-    cantidadVertices++;
-    return true;
+        codigos[cantidadVertices] = codigo;
+        adyacencia[cantidadVertices] = nullptr;
+        activo[cantidadVertices] = true;
+        cantidadVertices++;
+        return true;
 }
 
 bool Grafo::existeVertice(const string& codigo) const {
@@ -149,4 +166,33 @@ int Grafo::caminoMasCorto(const string& origen, const string& destino, string& c
     delete[] visitado;
     delete[] padre;
     return tramos;
+}
+// Saca la arista origen -> destino de la lista de adyacencia de origen
+void Grafo::quitarArista(int origen, int destino) {
+    NodoAdyacente* anterior = nullptr;
+    for (NodoAdyacente* a = adyacencia[origen]; a != nullptr; a = a->siguiente) {
+        if (a->destino == destino) {
+            if (anterior == nullptr) adyacencia[origen] = a->siguiente;
+            else anterior->siguiente = a->siguiente;
+            delete a;
+            return;
+        }
+        anterior = a;
+    }
+}
+// Elimina la estacion del grafo junto con todas sus ciclovias
+bool Grafo::eliminarVertice(const string& codigo) {
+    int i = indiceDe(codigo);
+    if (i == -1) return false;
+
+    NodoAdyacente* a = adyacencia[i];
+    while (a != nullptr) {
+        quitarArista(a->destino, i);          // 1. uso a->destino
+        NodoAdyacente* siguiente = a->siguiente;   // 2. guardo quién sigue
+        delete a;                             // 3. recién ahora tiro la tarjeta
+        a = siguiente;                        // 4. avanzo a la que guardé
+    }
+    adyacencia[i] = nullptr;
+    activo[i] = false;
+    return true;
 }
