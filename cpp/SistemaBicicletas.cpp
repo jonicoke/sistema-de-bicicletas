@@ -4,7 +4,7 @@
 using namespace std;
 
 SistemaBicicletas::SistemaBicicletas(){
-    tablaEstaciones = new TablaHash();
+    tablaEstaciones = new TablaHash(37);
     abbBicicletas = new AbbBicicleta();
     grafoCiclovias = new Grafo();
     heapTaller = new MinHeap();
