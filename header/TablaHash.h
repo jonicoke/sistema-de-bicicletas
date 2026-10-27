@@ -31,9 +31,9 @@ public:
     bool eliminar(const std::string& codigo); 
 
     int getCantidad() const;
+    int getTamanioTabla() const;
     int getColisiones() const;
     double getFactorCarga() const;
-
     // Devuelve un arreglo nuevo con punteros a todas las estaciones.
     // Quien lo llama debe hacer delete[] del arreglo (no de las estaciones).
     Estacion** obtenerEstaciones(int& cantidadOut) const;

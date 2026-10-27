@@ -35,6 +35,8 @@ void SistemaBicicletas::agregarEstacion(const Estacion& estacion) {
     bool insertado = tablaEstaciones->insertar(estacion);
 
     if(insertado){
+        //Si fue insertado lo agrego como vértice a GrafoCiclovias
+        grafoCiclovias->agregarVertice(estacion.getCodigo());
         cout << "Estacion " << estacion.getCodigo() << " agregada con exito." << endl;
     }
     else{
@@ -46,6 +48,7 @@ void SistemaBicicletas::eliminarEstacion(const string& codigoEstacion) {
     bool borrado = tablaEstaciones->eliminar(codigoEstacion);
 
     if (borrado) {
+        grafoCiclovias->eliminarVertice(codigoEstacion);
         cout << "Estacion " << codigoEstacion << " eliminada correctamente." << endl;
     } else {
         cout << "Error: No se pudo eliminar. La estacion '" << codigoEstacion << "' no existe." << endl;
@@ -241,32 +244,69 @@ void SistemaBicicletas::mostrarViajesDeUsuario(int dniUsuario) {
         cout << "El usuario " << dniUsuario << " no tiene viajes registrados." << endl;
         return;
     }
+}
+// void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
+//     Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
+//     bool insertado = abbBicicletas->insertar(nuevaBici); 
+//     // Inserta en el árbol antes de verificar la estación (codigoEstacion)
 
-void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
+//     if (insertado) {
+//         cout << "Bicicleta " << id << " agregada con exito al ABB." << endl;
+
+//         // Solo incrementamos las bicis disponibles si el registro fue manual
+//         if (esManual) {
+//             Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
+//             if (estacion != nullptr) {
+//                 estacion->setBicisDisponibles(estacion->getBicisDisponibles() + 1);
+//                 // Suma como disponible aunque la bici esté averiada; una bici averiada no se puede retirar
+//                 // Además, no se controla la capacidadAnclajes. 
+//                 // BicisDisponibles puede superar capacidadAnclajes 
+//                 cout << "Bicicletas disponibles en " << codigoEstacion << " actualizadas a: "
+//                      << estacion->getBicisDisponibles() << endl;
+//             } else {
+//                 cout << "[ADVERTENCIA] La estacion " << codigoEstacion << " no existe en el sistema." << endl;
+//             }
+//         }
+
+//     } else {
+//         cout << "Error: La bicicleta con ID " << id << " ya existe en el sistema." << endl;
+//     }
+// }
+void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual){
+    // Antes de agregar la bicicleta a una estación, verificamos que la estación exista.
+    Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
+    // Si la estacion es nula
+    if (estacion == nullptr) {
+        cout << "Error: la estacion " << codigoEstacion << " no existe." << endl; 
+        return;
+    }
+    // Si la estacion existe, verificamos el estado de la bicicleta y la capacidad de anclaje de la estacion
+    if (esManual && estado == EstadoBici::OK && estacion->getBicisDisponibles() >= estacion->getCapacidadAnclajes()) {
+        cout << "Error: la estacion " << codigoEstacion << " no tiene anclajes libres." << endl;
+        return;
+    }
+    // Si la estacion existe, la bicicleta esta OK y hay capacidad de anclaje, agregamos la bicicleta
+    // Creamos la bicicleta
     Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
-    bool insertado = abbBicicletas->insertar(nuevaBici);
+    // Validamos si no se insertó correctamente la bicicleta (Se ejecuta la función insertar y devuelve bool)
+    if(!abbBicicletas->insertar(nuevaBici)){
+        cout << "Error: la bicicleta con ID " << id  << " ya existe en el sistema." << endl;
+        return;
+    }
+    // Si se insertó correctamente lo imprimimos:
+    cout << "Bicicleta " << id << " agregada con exito al ABB." << endl;
 
-    if (insertado) {
-        cout << "Bicicleta " << id << " agregada con exito al ABB." << endl;
-
-        // Solo incrementamos las bicis disponibles si el registro fue manual
-        if (esManual) {
-            Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
-            if (estacion != nullptr) {
-                estacion->setBicisDisponibles(estacion->getBicisDisponibles() + 1);
-                cout << "Bicicletas disponibles en " << codigoEstacion << " actualizadas a: "
-                     << estacion->getBicisDisponibles() << endl;
-            } else {
-                cout << "[ADVERTENCIA] La estacion " << codigoEstacion << " no existe en el sistema." << endl;
-            }
-        }
-
-    } else {
-        cout << "Error: La bicicleta con ID " << id << " ya existe en el sistema." << endl;
+    // Como la bicicleta ya se insertó correctamente, sumamos las bicicletas disponibles de la estacion.
+    if (esManual && estado == EstadoBici::OK) {
+        estacion->setBicisDisponibles(estacion->getBicisDisponibles() + 1);
+        cout << "Bicicletas disponibles en " << codigoEstacion << ": " << estacion->getBicisDisponibles() << endl;
     }
 }
-
 void SistemaBicicletas::agregarCiclovia(const string& codigoOrigen, const string& codigoDestino) {
+    if (tablaEstaciones->buscar(codigoOrigen) == nullptr || tablaEstaciones->buscar(codigoDestino) == nullptr) {
+        cout << "Error: ambas estaciones deben existir para crear la ciclovia." << endl;
+        return;
+    }
     bool agregada = grafoCiclovias->agregarCiclovia(codigoOrigen, codigoDestino);
 
     if (agregada) {
@@ -276,3 +316,34 @@ void SistemaBicicletas::agregarCiclovia(const string& codigoOrigen, const string
     }
 }
 
+// A6: recorrido con menor cantidad de tramos (BFS)
+void SistemaBicicletas::calcularRecorridoPorCiclovia(const string& codigoOrigen, const string& codigoDestino) {
+    if (tablaEstaciones->buscar(codigoOrigen) == nullptr) {
+        cout << "Error: la estacion " << codigoOrigen << " no existe." << endl;
+        return;
+    }
+    if (tablaEstaciones->buscar(codigoDestino) == nullptr) {
+        cout << "Error: la estacion " << codigoDestino << " no existe." << endl;
+        return;
+    }
+
+    string camino;
+    int tramos = grafoCiclovias->caminoMasCorto(codigoOrigen, codigoDestino, camino);
+
+    if (tramos < 0) {
+        // -1: no hay recorrido. -2: alguna estacion no esta en el grafo (sin ciclovias)
+        cout << "No existe recorrido por ciclovias entre " << codigoOrigen << " y " << codigoDestino << "." << endl;
+    } else if (tramos == 0) {
+        cout << "El origen y el destino son la misma estacion (0 tramos)." << endl;
+    } else {
+        cout << "Recorrido mas corto (" << tramos << " tramos): " << camino << endl;
+    }
+}
+
+// Colisiones y factor de carga de la tabla hash
+void SistemaBicicletas::mostrarEstadisticasTabla() {
+    cout << "Estaciones en la tabla : " << tablaEstaciones->getCantidad() << endl;
+    cout << "Tamanio de la tabla    : " << tablaEstaciones->getTamanioTabla() << endl;
+    cout << "Colisiones             : " << tablaEstaciones->getColisiones() << endl;
+    cout << "Factor de carga        : " << tablaEstaciones->getFactorCarga() << endl;
+}
