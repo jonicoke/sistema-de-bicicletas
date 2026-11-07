@@ -1,4 +1,12 @@
 CAB Caballito Caballito 30 5
-MON Monserrat Monserrat 25 2
-CON Constitucion Constitucion 20 3
+MON Monserrat Monserrat 25 5
+CON Constitucion Constitucion 20 0
 PAP ParquePatricio ParquePatricio 15 8
+RET Retiro Retiro 20 4
+PLZ PlazaDeMayo Monserrat 30 1
+PAL ParqueTresDeFebrero Palermo 40 35
+BEL Belgrano Belgrano 10 2
+FLO Flores Flores 25 3
+ALM Almagro Almagro 20 0
+BOE Boedo Boedo 25 10
+NUN Nunez Nunez 20 6

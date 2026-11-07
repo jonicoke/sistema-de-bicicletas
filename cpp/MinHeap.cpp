@@ -36,12 +36,21 @@ void MinHeap::agrandar() {
 }
 
 bool MinHeap::insertar(const Bicicleta& bicicleta) {
+    // Verifico que está averiada
     if (!bicicleta.estaAveriada()) {
         return false; 
     }
+    // Verifico que no esté ya en el heap
+    for (int i = 0; i < tamanio; i++) {
+        if (arreglo[i].biciId == bicicleta.getBiciId()) {
+            return false; 
+        }
+    }
+    // Si el arreglo está lleno, lo agrando
     if (tamanio == capacidad) {
         agrandar();
     }
+    // Inserto la bicicleta en el arreglo 
     arreglo[tamanio].biciId = bicicleta.getBiciId();
     arreglo[tamanio].prioridad = calcularPrioridad(bicicleta);
     tamanio++;
