@@ -165,6 +165,13 @@ int main() {
         mostrarMenu();
         cin >> opcion;
 
+        // Si la lectura falló (por ingresar una letra o caracter especial)
+        if (cin.fail()) {
+            cin.clear(); // Limpiamos el flag de error de cin
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Descartamos la linea erronea
+            opcion = -1; // Forzamos a caer en el 'default'
+        }
+
         switch (opcion) {
             case 1: {
                 cout << "\n--- CARGANDO DATOS INICIALES ---" << endl;
