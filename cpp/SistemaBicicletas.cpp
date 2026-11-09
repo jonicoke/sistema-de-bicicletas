@@ -223,15 +223,24 @@ void SistemaBicicletas::listarBicicletasConXKm(int km) {
 }
 // B5: insertar una bicicleta en el taller
 void SistemaBicicletas::enviarBicicletaATaller(int biciId) {
-    Bicicleta* bici = abbBicicletas->buscar(biciId);   // el arbol informa si no existe
+    Bicicleta* bici = abbBicicletas->buscar(biciId);
+
     if (bici == nullptr) return;
 
-    if (heapTaller->insertar(*bici)) {
-        cout << "Bicicleta " << biciId << " enviada al taller con prioridad "
-             << MinHeap::calcularPrioridad(*bici) << "." << endl;
-    } else {
-        cout << "La bicicleta " << biciId << " no esta averiada: no entra al taller." << endl;
+    if (!bici->estaAveriada()) {
+        cout << "La bicicleta no esta averiada." << endl;
+        return;
     }
+
+    if (!heapTaller->insertar(*bici)) {
+        cout << "La bicicleta " << biciId
+             << " ya esta registrada en el taller." << endl;
+        return;
+    }
+
+    cout << "Bicicleta " << biciId
+         << " enviada al taller con prioridad "
+         << MinHeap::calcularPrioridad(*bici) << "." << endl;
 }
 
 // B.5: extraer la bicicleta mas urgente y marcarla como reparada (OK) en el ABB
