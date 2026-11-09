@@ -300,33 +300,7 @@ void SistemaBicicletas::mostrarCantidadAveriadas() {
 void SistemaBicicletas::mostrarAlturaABB() {
     cout << "Altura del ABB de bicicletas: " << abbBicicletas->altura() << endl;
 }
-// void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
-//     Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
-//     bool insertado = abbBicicletas->insertar(nuevaBici); 
-//     // Inserta en el árbol antes de verificar la estación (codigoEstacion)
 
-//     if (insertado) {
-//         cout << "Bicicleta " << id << " agregada con exito al ABB." << endl;
-
-//         // Solo incrementamos las bicis disponibles si el registro fue manual
-//         if (esManual) {
-//             Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
-//             if (estacion != nullptr) {
-//                 estacion->setBicisDisponibles(estacion->getBicisDisponibles() + 1);
-//                 // Suma como disponible aunque la bici esté averiada; una bici averiada no se puede retirar
-//                 // Además, no se controla la capacidadAnclajes. 
-//                 // BicisDisponibles puede superar capacidadAnclajes 
-//                 cout << "Bicicletas disponibles en " << codigoEstacion << " actualizadas a: "
-//                      << estacion->getBicisDisponibles() << endl;
-//             } else {
-//                 cout << "[ADVERTENCIA] La estacion " << codigoEstacion << " no existe en el sistema." << endl;
-//             }
-//         }
-
-//     } else {
-//         cout << "Error: La bicicleta con ID " << id << " ya existe en el sistema." << endl;
-//     }
-// }
 void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual){
     // Antes de agregar la bicicleta a una estación, verificamos que la estación exista.
     Estacion* estacion = tablaEstaciones->buscar(codigoEstacion);
