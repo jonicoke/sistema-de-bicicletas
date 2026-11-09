@@ -15,10 +15,10 @@ using namespace std;
 
 void cargarEstaciones(SistemaBicicletas& sistema) {
     // ifstream sirve para el manejo de archivos con otras carpetas
-    ifstream archivo("datos/estaciones.txt.txt"); // Le estamos diciendo al sistema que abra de la carpeta datos el archivo estaciones.txt
+    ifstream archivo("datos/estaciones.txt"); // Le estamos diciendo al sistema que abra de la carpeta datos el archivo estaciones.txt
 
     if (!archivo.is_open()) { // si no abre el archivo, intentamos abrirlo de nuevo
-        archivo.open("datos/estaciones.txt.txt");
+        archivo.open("datos/estaciones.txt");
     }
 
     if (!archivo.is_open()) { // si no abre de nuevo tiramos una advertencia y cortamos el programa
@@ -47,7 +47,7 @@ void cargarEstaciones(SistemaBicicletas& sistema) {
 void cargarViaje(SistemaBicicletas& sistema) {
     ifstream archivo("datos/viajes.txt");
     if (!archivo.is_open()) {
-        archivo.open("datos/viajes.txt.txt");
+        archivo.open("datos/viajes.txt");
     }
 
     if (!archivo.is_open()) {
@@ -74,7 +74,7 @@ void cargarViaje(SistemaBicicletas& sistema) {
 void cargarBicicletas(SistemaBicicletas& sistema) {
     ifstream archivo("datos/bicicletas.txt");
     if (!archivo.is_open()) {
-        archivo.open("datos/bicicletas.txt.txt");
+        archivo.open("datos/bicicletas.txt");
     }
 
     if (!archivo.is_open()) {
@@ -100,7 +100,7 @@ void cargarBicicletas(SistemaBicicletas& sistema) {
 }
 
 void cargarCiclovias(SistemaBicicletas& sistema) {
-    ifstream archivo("datos/ciclovias.txt.txt");
+    ifstream archivo("datos/ciclovias.txt");
     if (!archivo.is_open()) {
         archivo.open("datos/ciclovias.txt");
     }
