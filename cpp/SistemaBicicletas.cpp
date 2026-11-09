@@ -395,6 +395,80 @@ void SistemaBicicletas::calcularRecorridoPorCiclovia(const string& codigoOrigen,
     }
 }
 
+
+// Función auxiliar recursiva para el backtracking
+static void backtrackingRedistribucion(
+    EstacionFaltante* estaciones, int n, int indice,
+    int capacidadRestante, string* solucionActual, int tamSolucion,
+    bool& encontroSolucion
+) {
+    // Caso base: se completó exactamente la capacidad del camión
+    if (capacidadRestante == 0) {
+        encontroSolucion = true;
+        cout << "{ ";
+        for (int i = 0; i < tamSolucion; i++) {
+            cout << solucionActual[i] << (i < tamSolucion - 1 ? ", " : " ");
+        }
+        cout << "}" << endl;
+        return;
+    }
+
+    // Caso base de corte: nos pasamos de capacidad o nos quedamos sin estaciones
+    if (capacidadRestante < 0 || indice >= n) {
+        return;
+    }
+
+    // Opción 1: INCLUIR la estación actual en la combinación
+    solucionActual[tamSolucion] = estaciones[indice].codigo;
+    backtrackingRedistribucion(
+        estaciones, n, indice + 1,
+        capacidadRestante - estaciones[indice].faltante,
+        solucionActual, tamSolucion + 1,
+        encontroSolucion
+    );
+
+    // Opción 2: NO INCLUIR la estación actual (Backtrack)
+    backtrackingRedistribucion(
+        estaciones, n, indice + 1,
+        capacidadRestante,
+        solucionActual, tamSolucion,
+        encontroSolucion
+    );
+}
+
+void SistemaBicicletas::redistribuirBicicletasBacktracking(int capacidadCamion) {
+    int n = 0;
+    Estacion** todas = tablaEstaciones->obtenerEstaciones(n);
+
+    // Filtramos solo las estaciones a las que les faltan bicicletas
+    EstacionFaltante* faltantes = new EstacionFaltante[n];
+    int cantidadFaltantes = 0;
+
+    for (int i = 0; i < n; i++) {
+        int faltante = todas[i]->getCapacidadAnclajes() - todas[i]->getBicisDisponibles();
+        if (faltante > 0) {
+            faltantes[cantidadFaltantes].codigo = todas[i]->getCodigo();
+            faltantes[cantidadFaltantes].faltante = faltante;
+            cantidadFaltantes++;
+        }
+    }
+
+    delete[] todas;
+
+    cout << "\n--- REDISTRIBUCION CON BACKTRACKING (Capacidad: " << capacidadCamion << ") ---" << endl;
+    string* solucionActual = new string[cantidadFaltantes];
+    bool encontroSolucion = false;
+
+    backtrackingRedistribucion(faltantes, cantidadFaltantes, 0, capacidadCamion, solucionActual, 0, encontroSolucion);
+
+    if (!encontroSolucion) {
+        cout << "No existe ninguna combinacion de estaciones que sume exactamente la capacidad " << capacidadCamion << "." << endl;
+    }
+
+    delete[] solucionActual;
+    delete[] faltantes;
+}
+
 // Colisiones y factor de carga de la tabla hash
 void SistemaBicicletas::mostrarEstadisticasTabla() {
     cout << "Estaciones en la tabla : " << tablaEstaciones->getCantidad() << endl;

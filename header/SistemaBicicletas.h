@@ -12,6 +12,14 @@
 
 using namespace std;
 
+
+struct EstacionFaltante {
+    std::string codigo;
+    int faltante;
+};
+
+
+
 class SistemaBicicletas
 {
 private:
@@ -54,6 +62,9 @@ public:
     void listarBicicletasOrdenadas();          // C.3
     void mostrarCantidadAveriadas();            // C.4
     void mostrarAlturaABB();                    // C.5
+
+    // Punto D: Backtracking
+    void redistribuirBicicletasBacktracking(int capacidadCamion);
 
     // Adicionales
     void agregarBicicleta(int id, const std::string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual = false); // adicionales

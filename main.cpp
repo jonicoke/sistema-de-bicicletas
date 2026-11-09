@@ -151,6 +151,7 @@ void mostrarMenu() {
     cout << "20. Calcular recorrido mas corto por ciclovia (BFS)" << endl;
     cout << "21. Gestion de Taller (Enviar / Atender)" << endl;
     cout << "22. Mostrar estadisticas de la Tabla Hash" << endl;
+    cout << "23. Redistribuir bicicletas (Backtracking)" << endl;
     cout << " 0. Salir" << endl;
     cout << "------------------------------------------" << endl;
     cout << "Ingrese una opcion: ";
@@ -377,6 +378,20 @@ int main() {
             case 22: {
                 cout << "\n--- ESTADISTICAS DE LA TABLA HASH ---" << endl;
                 sistema.mostrarEstadisticasTabla();
+                break;
+            }
+            case 23: {
+                int capacidad;
+                cout << "\n--- REDISTRIBUCION DE BICICLETAS (BACKTRACKING) ---" << endl;
+                cout << "Ingrese la capacidad del camion (C): ";
+                cin >> capacidad;
+
+                while (capacidad <= 0) {
+                    cout << "Capacidad invalida. Ingrese un numero mayor a 0: ";
+                    cin >> capacidad;
+                }
+
+                sistema.redistribuirBicicletasBacktracking(capacidad);
                 break;
             }
             case 0:
