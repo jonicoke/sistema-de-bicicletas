@@ -44,6 +44,10 @@ bool Bicicleta::tieneMasKilometros(int x) const {
     return kilometros > x; 
 }
 
+void Bicicleta::setEstado(EstadoBici nuevoEstado) {
+    this->estado = nuevoEstado;
+}
+
 void Bicicleta::mostrar() const {
     cout << "Bici " << biciId
          << " | Estacion: " << codigoEstacion

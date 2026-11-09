@@ -143,9 +143,14 @@ void mostrarMenu() {
     cout << "12. Agregar tramo de ciclovia manualmente (Grafo)" << endl;
     cout << "13. Registrar viaje manualmente (Lista)" << endl;
     cout << "14. Agregar estacion manualmente (Tabla Hash)" << endl;
-    cout << "15. Calcular recorrido mas corto por ciclovia (BFS)" << endl;
-    cout << "16. Gestion de Taller (Enviar / Atender)" << endl;
-    cout << "17. Mostrar estadisticas de la Tabla Hash" << endl;
+    cout << "15. Eliminar estacion (Tabla Hash & Grafo)" << endl;
+    cout << "16. Buscar bicicleta por ID (ABB)" << endl;
+    cout << "17. Listar bicicletas in-order por ID (ABB)" << endl;
+    cout << "18. Mostrar cantidad de bicicletas averiadas (ABB)" << endl;
+    cout << "19. Mostrar altura del ABB de bicicletas" << endl;
+    cout << "20. Calcular recorrido mas corto por ciclovia (BFS)" << endl;
+    cout << "21. Gestion de Taller (Enviar / Atender)" << endl;
+    cout << "22. Mostrar estadisticas de la Tabla Hash" << endl;
     cout << " 0. Salir" << endl;
     cout << "------------------------------------------" << endl;
     cout << "Ingrese una opcion: ";
@@ -163,7 +168,7 @@ int main() {
             case 1: {
                 cout << "\n--- CARGANDO DATOS INICIALES ---" << endl;
                 cargarEstaciones(sistema);
-                cargarBicicletas(sistema); // Cargamos bicis antes de viajes para validaciones
+                cargarBicicletas(sistema);
                 cargarViaje(sistema);
                 cargarCiclovias(sistema);
                 break;
@@ -172,22 +177,14 @@ int main() {
                 int dniUsuario;
                 cout << "\nIngrese DNI del usuario: ";
                 cin >> dniUsuario;
-
-                ListaViajes viajes = sistema.buscarViajesDeUsuario(dniUsuario);
-                cout << "Se encontraron " << viajes.getTamanio() << " viaje(s) para el DNI " << dniUsuario << endl;
-
-                NodoViaje* actual = viajes.getCabeza();
-                while (actual != nullptr) {
-                    actual->getViaje().mostrarInformacion();
-                    actual = actual->getSiguiente();
-                }
+                // Delegado directamente a SistemaBicicletas
+                sistema.mostrarViajesDeUsuario(dniUsuario);
                 break;
             }
             case 3: {
                 int dniUsuario;
                 cout << "\nIngrese DNI del usuario: ";
                 cin >> dniUsuario;
-
                 sistema.mostrarMinutosPedaleadosDeUsuario(dniUsuario);
                 break;
             }
@@ -195,7 +192,6 @@ int main() {
                 string codEstacion;
                 cout << "\nIngrese codigo de estacion: ";
                 cin >> codEstacion;
-
                 sistema.mostrarInformacionDeEstacion(codEstacion);
                 break;
             }
@@ -204,8 +200,13 @@ int main() {
                 cout << "\n--- LISTAR ESTACIONES ORDENADAS ---" << endl;
                 cout << "1. Por capacidad de anclajes" << endl;
                 cout << "2. Por bicicletas disponibles" << endl;
-                cout << "Seleccione una opcion: ";
+                cout << "Seleccione una opcion (1 o 2): ";
                 cin >> seleccion;
+
+                while (seleccion != 1 && seleccion != 2) {
+                    cout << "Opcion invalida. Ingrese 1 o 2: ";
+                    cin >> seleccion;
+                }
 
                 bool porCapacidad = (seleccion == 1);
                 sistema.listarEstacionesOrdenadas(porCapacidad);
@@ -222,7 +223,6 @@ int main() {
                 cout << "\n--- RETIRAR BICICLETA ---" << endl;
                 cout << "Codigo de estacion: "; cin >> cod;
                 cout << "DNI del usuario: "; cin >> dni;
-
                 sistema.retirarBicicleta(cod, dni);
                 break;
             }
@@ -230,7 +230,6 @@ int main() {
                 string cod;
                 cout << "\n--- DEVOLVER BICICLETA ---" << endl;
                 cout << "Codigo de estacion: "; cin >> cod;
-
                 sistema.devolverBicicleta(cod);
                 break;
             }
@@ -238,13 +237,9 @@ int main() {
                 string codigo;
                 int fechaDesde, fechaHasta;
                 cout << "\n--- CONTAR VIAJES ENTRE FECHAS ---" << endl;
-                cout << "Codigo de estacion: ";
-                cin >> codigo;
-                cout << "Fecha desde (YYYYMMDD): ";
-                cin >> fechaDesde;
-                cout << "Fecha hasta (YYYYMMDD): ";
-                cin >> fechaHasta;
-
+                cout << "Codigo de estacion: "; cin >> codigo;
+                cout << "Fecha desde (YYYYMMDD): "; cin >> fechaDesde;
+                cout << "Fecha hasta (YYYYMMDD): "; cin >> fechaHasta;
                 sistema.contarViajesDesdeEstacion(codigo, fechaDesde, fechaHasta);
                 break;
             }
@@ -253,8 +248,6 @@ int main() {
                 cout << "\n--- CONSULTAR BICICLETAS POR KILOMETRAJE (ABB) ---" << endl;
                 cout << "Ingrese la cantidad minima de kilometros: ";
                 cin >> km;
-
-                // Adaptado a la nueva versión que imprime y libera internamente
                 sistema.listarBicicletasConXKm(km);
                 break;
             }
@@ -263,40 +256,40 @@ int main() {
                 string codEstacion;
 
                 cout << "\n--- REGISTRAR BICICLETA MANUALLY (ABB) ---" << endl;
-                cout << "ID de la Bicicleta (int): ";
-                cin >> id;
-                cout << "Codigo de Estacion actual (ej: CAB): ";
-                cin >> codEstacion;
-                cout << "Tipo (1. Electrica / 2. Mecanica): ";
-                cin >> optTipo;
-                cout << "Estado (1. OK / 2. AVERIADA): ";
-                cin >> optEstado;
-                cout << "Kilometros recorridos: ";
-                cin >> km;
+                cout << "ID de la Bicicleta (int): "; cin >> id;
+                cout << "Codigo de Estacion actual (ej: CAB): "; cin >> codEstacion;
+
+                cout << "Tipo (1. Electrica / 2. Mecanica): "; cin >> optTipo;
+                while (optTipo != 1 && optTipo != 2) {
+                    cout << "Opcion invalida. Ingrese 1 (Electrica) o 2 (Mecanica): ";
+                    cin >> optTipo;
+                }
+
+                cout << "Estado (1. OK / 2. AVERIADA): "; cin >> optEstado;
+                while (optEstado != 1 && optEstado != 2) {
+                    cout << "Opcion invalida. Ingrese 1 (OK) o 2 (AVERIADA): ";
+                    cin >> optEstado;
+                }
+
+                cout << "Kilometros recorridos: "; cin >> km;
 
                 TipoBici tipo = (optTipo == 1) ? TipoBici::ELECTRICA : TipoBici::MECANICA;
                 EstadoBici estado = (optEstado == 1) ? EstadoBici::OK : EstadoBici::AVERIADA;
 
-                // Pasamos 'true' para que se sume a las bicicletas disponibles de la estacion
                 sistema.agregarBicicleta(id, codEstacion, tipo, estado, km, true);
                 break;
             }
             case 12: {
                 string codOrigen, codDestino;
-
                 cout << "\n--- AGREGAR TRAMO DE CICLOVIA MANUALLY (GRAFO) ---" << endl;
-                cout << "Codigo Estacion Origen (ej: CAB): ";
-                cin >> codOrigen;
-                cout << "Codigo Estacion Destino (ej: MON): ";
-                cin >> codDestino;
-
+                cout << "Codigo Estacion Origen (ej: CAB): "; cin >> codOrigen;
+                cout << "Codigo Estacion Destino (ej: MON): "; cin >> codDestino;
                 sistema.agregarCiclovia(codOrigen, codDestino);
                 break;
             }
             case 13: {
                 int idViaje, idBici, dniUsuario, fecha, duracion;
                 string codOrigen, codDestino;
-
                 cout << "\n--- REGISTRAR VIAJE MANUALLY ---" << endl;
                 cout << "ID del Viaje: "; cin >> idViaje;
                 cout << "ID de la Bicicleta: "; cin >> idBici;
@@ -313,7 +306,6 @@ int main() {
             case 14: {
                 string codigo, nombre, barrio;
                 int capacidad, bicisDisponibles;
-
                 cout << "\n--- AGREGAR ESTACION MANUALLY ---" << endl;
                 cout << "Codigo de Estacion (ej: PAL): "; cin >> codigo;
                 cout << "Nombre de Estacion: "; cin >> nombre;
@@ -326,15 +318,45 @@ int main() {
                 break;
             }
             case 15: {
+                string codEstacion;
+                cout << "\n--- ELIMINAR ESTACION ---" << endl;
+                cout << "Ingrese codigo de la estacion a eliminar: ";
+                cin >> codEstacion;
+                sistema.eliminarEstacion(codEstacion);
+                break;
+            }
+            case 16: {
+                int biciId;
+                cout << "\n--- BUSCAR BICICLETA POR ID (ABB) ---" << endl;
+                cout << "Ingrese ID de la bicicleta: ";
+                cin >> biciId;
+                sistema.buscarBicicleta(biciId);
+                break;
+            }
+            case 17: {
+                cout << "\n--- LISTADO DE BICICLETAS EN ORDEN (ABB) ---" << endl;
+                sistema.listarBicicletasOrdenadas();
+                break;
+            }
+            case 18: {
+                cout << "\n--- CONSULTAR BICICLETAS AVERIADAS (ABB) ---" << endl;
+                sistema.mostrarCantidadAveriadas();
+                break;
+            }
+            case 19: {
+                cout << "\n--- ALTURA DEL ARBOL (ABB) ---" << endl;
+                sistema.mostrarAlturaABB();
+                break;
+            }
+            case 20: {
                 string codOrigen, codDestino;
                 cout << "\n--- RECORRIDO MAS CORTO POR CICLOVIA ---" << endl;
                 cout << "Codigo Estacion Origen: "; cin >> codOrigen;
                 cout << "Codigo Estacion Destino: "; cin >> codDestino;
-
                 sistema.calcularRecorridoPorCiclovia(codOrigen, codDestino);
                 break;
             }
-            case 16: {
+            case 21: {
                 int subOpcion;
                 cout << "\n--- GESTION DE TALLER ---" << endl;
                 cout << "1. Enviar bicicleta averiada al taller" << endl;
@@ -352,7 +374,7 @@ int main() {
                 }
                 break;
             }
-            case 17: {
+            case 22: {
                 cout << "\n--- ESTADISTICAS DE LA TABLA HASH ---" << endl;
                 sistema.mostrarEstadisticasTabla();
                 break;
