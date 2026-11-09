@@ -22,6 +22,7 @@ private:
     AbbBicicleta* abbBicicletas;
 
     void ordenarPorSeleccion(Estacion** arr, int n, bool porCapacidad);
+    void liberarLista(NodoLista* lista);
 
 public:
     SistemaBicicletas();
@@ -29,14 +30,14 @@ public:
     SistemaBicicletas(const SistemaBicicletas&) = delete;
     SistemaBicicletas& operator=(const SistemaBicicletas&) = delete;
     
-    // A
+    // A - Estaciones
     void agregarEstacion(const Estacion& estacion);
-    void eliminarEstacion(const string& codigoEstacion);
-    void listarEstacionesOrdenadas(bool porCapacidad); // A.4
-    void listarEstacionesConBajaOcupacion(); // A.5
+    void eliminarEstacion(const string& codigoEstacion); // A.3
+    void listarEstacionesOrdenadas(bool porCapacidad);   // A.4
+    void listarEstacionesConBajaOcupacion();             // A.5
     void mostrarInformacionDeEstacion(const string& codigoEstacion);
     
-    // B
+    // B - Viajes y Taller
     void registrarViaje(const Viaje& viaje);
     ListaViajes buscarViajesDeUsuario(int dniUsuario);
     int contarViajesDesdeEstacion(const string& codigoEstacion, int fechaDesde, int fechaHasta); // B.1
@@ -47,7 +48,14 @@ public:
     void devolverBicicleta(const string& codigoEstacion);  
     void enviarBicicletaATaller(int biciId); //B.5
     void atenderTaller();                   // B.5
-    
+
+    // C - Operaciones sobre el ABB de Bicicletas
+    void buscarBicicleta(int biciId);           // C.2
+    void listarBicicletasOrdenadas();          // C.3
+    void mostrarCantidadAveriadas();            // C.4
+    void mostrarAlturaABB();                    // C.5
+
+    // Adicionales
     void agregarBicicleta(int id, const std::string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual = false); // adicionales
     void agregarCiclovia(const std::string& codigoOrigen, const std::string& codigoDestino); // adicionales
     void calcularRecorridoPorCiclovia(const string& codigoOrigen, const string& codigoDestino);

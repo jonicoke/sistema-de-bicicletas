@@ -73,19 +73,22 @@ ListaViajes SistemaBicicletas::buscarViajesDeUsuario(int dniUsuario) {
     return viajesFiltrados;
 }
 
-int SistemaBicicletas::mostrarMinutosPedaleadosDeUsuario(int dniUsuario){
-    int totalMinutos = 0;
-
+int SistemaBicicletas::mostrarMinutosPedaleadosDeUsuario(int dniUsuario) {
     ListaViajes viajes = buscarViajesDeUsuario(dniUsuario);
 
+    if (viajes.estaVacia()) {
+        cout << "El usuario con DNI " << dniUsuario << " no tiene viajes registrados en el sistema." << endl;
+        return 0;
+    }
+
+    int totalMinutos = 0;
     NodoViaje* actual = viajes.getCabeza();
-    while(actual != nullptr){
+    while (actual != nullptr) {
         totalMinutos += actual->getViaje().getDuracionMin();
         actual = actual->getSiguiente();
     }
 
-    cout << "El usuario con DNI : " << dniUsuario << " pedaleo un total de : " << totalMinutos << " minutos." << endl;
-
+    cout << "El usuario con DNI " << dniUsuario << " pedaleo un total de: " << totalMinutos << " minutos." << endl;
     return totalMinutos;
 }
 
@@ -203,9 +206,14 @@ int SistemaBicicletas::contarViajesDesdeEstacion(const string& codigo, int desde
     return cantidad;
 }
 
-// NodoLista* SistemaBicicletas::listarBicicletasConXKm(int kilometros) {
-//     return abbBicicletas->listarConMasDeKm(kilometros);
-// }
+// Auxiliar para liberar nodos temporales de la lista
+void SistemaBicicletas::liberarLista(NodoLista* lista) {
+    while (lista != nullptr) {
+        NodoLista* aux = lista;
+        lista = lista->sig;
+        delete aux;
+    }
+}
 // B3: mostrar y liberar
 void SistemaBicicletas::listarBicicletasConXKm(int km) {
     NodoLista* lista = abbBicicletas->listarConMasDeKm(km);
@@ -226,15 +234,24 @@ void SistemaBicicletas::enviarBicicletaATaller(int biciId) {
     }
 }
 
-// B5: extraer la bicicleta mas urgente
+// B.5: extraer la bicicleta mas urgente y marcarla como reparada (OK) en el ABB
 void SistemaBicicletas::atenderTaller() {
     if (heapTaller->estaVacia()) {
         cout << "El taller no tiene bicicletas pendientes." << endl;
         return;
     }
+
+    // Extraemos la bicicleta con mayor prioridad del Heap
     OrdenTaller orden = heapTaller->extraerMasUrgente();
-    cout << "Se atiende la bicicleta " << orden.biciId
+    cout << "Se atiende y repara la bicicleta " << orden.biciId
          << " (prioridad " << orden.prioridad << ")." << endl;
+
+    // Buscamos la bicicleta real alojada en el ABB para actualizar su estado
+    Bicicleta* biciABB = abbBicicletas->buscar(orden.biciId);
+    if (biciABB != nullptr) {
+        biciABB->setEstado(EstadoBici::OK);
+        cout << "Estado de la bicicleta " << orden.biciId << " actualizado a: OK." << endl;
+    }
 }
 //B.2
 void SistemaBicicletas::mostrarViajesDeUsuario(int dniUsuario) {
@@ -244,6 +261,35 @@ void SistemaBicicletas::mostrarViajesDeUsuario(int dniUsuario) {
         cout << "El usuario " << dniUsuario << " no tiene viajes registrados." << endl;
         return;
     }
+
+    cout << "Se encontraron " << viajes.getTamanio() << " viaje(s) para el DNI " << dniUsuario << ":" << endl;
+    cout << "------------------------------------------" << endl;
+    NodoViaje* actual = viajes.getCabeza();
+    while (actual != nullptr) {
+        actual->getViaje().mostrarInformacion();
+        cout << "------------------------------------------" << endl;
+        actual = actual->getSiguiente();
+    }
+}
+
+// C.2: Buscar bicicleta por ID en el ABB
+void SistemaBicicletas::buscarBicicleta(int biciId) {
+    abbBicicletas->buscar(biciId);
+}
+
+// C.3: Listar bicicletas in-order por ID
+void SistemaBicicletas::listarBicicletasOrdenadas() {
+    abbBicicletas->listarInorder();
+}
+
+// C.4: Contar cantidad de bicicletas averiadas
+void SistemaBicicletas::mostrarCantidadAveriadas() {
+    cout << "Bicicletas averiadas: " << abbBicicletas->contarAveriadas() << endl;
+}
+
+// C.5: Mostrar altura del ABB
+void SistemaBicicletas::mostrarAlturaABB() {
+    cout << "Altura del ABB de bicicletas: " << abbBicicletas->altura() << endl;
 }
 // void SistemaBicicletas::agregarBicicleta(int id, const string& codigoEstacion, TipoBici tipo, EstadoBici estado, int kilometros, bool esManual) {
 //     Bicicleta nuevaBici(id, codigoEstacion, tipo, estado, kilometros);
