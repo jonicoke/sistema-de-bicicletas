@@ -35,6 +35,7 @@ public:
     bool esElectrica() const;
     bool tieneMasKilometros(int x) const; 
     void mostrar() const;
+    void setEstado(EstadoBici nuevoEstado);
 };
 
 #endif
