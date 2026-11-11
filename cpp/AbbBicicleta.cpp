@@ -21,7 +21,7 @@ int AbbBicicleta::cantidadBicicletas() const {
     return cantidad;
 }
 
-// ---------- insertar ----------
+
 NodoABB* AbbBicicleta::insertarRec(NodoABB* nodo, Bicicleta* nueva, bool& insertado) {
     if (nodo == nullptr) {
         insertado = true;
@@ -48,7 +48,7 @@ bool AbbBicicleta::insertar(const Bicicleta& bici) {
     return insertado;
 }
 
-// ---------- buscar ----------
+
 Bicicleta* AbbBicicleta::buscarRec(NodoABB* nodo, int id) const {
     if (nodo == nullptr) return nullptr;
     if (id == nodo->dato->getBiciId()) return nodo->dato;
@@ -66,19 +66,6 @@ Bicicleta* AbbBicicleta::buscar(int bicId) const {
     return bicicleta;
 }
 
-// ---------- listarInorder ----------
-// void AbbBicicleta::inorderRec(NodoABB* nodo, std::vector<Bicicleta*>& resultado) const {
-//     if (nodo == nullptr) return;
-//     inorderRec(nodo->izq, resultado);
-//     resultado.push_back(nodo->dato);
-//     inorderRec(nodo->der, resultado);
-// }
-
-// std::vector<Bicicleta*> AbbBicicleta::listarInorder() const {
-//     std::vector<Bicicleta*> resultado;
-//     inorderRec(raiz, resultado);
-//     return resultado;
-// }
 void AbbBicicleta::inorderRec(NodoABB* nodo) const {
     if (nodo == nullptr) return;
     inorderRec(nodo->izq);
@@ -90,7 +77,7 @@ void AbbBicicleta::listarInorder() const {
     inorderRec(raiz);
 }
 
-// ---------- contarAveriadas ----------
+
 int AbbBicicleta::contarAveriadasRec(NodoABB* nodo) const {
     if (nodo == nullptr) return 0;
     int suma = nodo->dato->estaAveriada() ? 1 : 0;
@@ -101,7 +88,7 @@ int AbbBicicleta::contarAveriadas() const {
     return contarAveriadasRec(raiz);
 }
 
-// ---------- altura ----------
+
 int AbbBicicleta::alturaRec(NodoABB* nodo) const {
     if (nodo == nullptr) return 0;
     return 1 + std::max(alturaRec(nodo->izq), alturaRec(nodo->der));
@@ -111,7 +98,6 @@ int AbbBicicleta::altura() const {
     return alturaRec(raiz);
 }
 
-// ---------- listarConMasDeKm ----------
 // Recorrido inorder: agrega al final de la lista (usando 'cola') las bicis
 // que superan los kilometros pedidos. Queda ordenada por biciId.
 void AbbBicicleta::listarConMasDeKmRec(NodoABB* nodo, int kilometros,
@@ -141,7 +127,7 @@ NodoLista* AbbBicicleta::listarConMasDeKm(int kilometros) const {
     return cabeza;
 }
 
-// ---------- eliminar ----------
+
 NodoABB* AbbBicicleta::eliminarRec(NodoABB* nodo, int id, bool& eliminado) {
     if (nodo == nullptr) return nullptr;
 

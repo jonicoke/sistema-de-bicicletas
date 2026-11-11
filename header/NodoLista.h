@@ -6,8 +6,8 @@
 // Nodo de lista simplemente enlazada.
 // Guarda un puntero a una bicicleta que pertenece al arbol (no es copia).
 struct NodoLista {
-    Bicicleta* dato;
-    NodoLista* sig;
+    Bicicleta* dato; // puntero --> biciOriginal, dato->setEstado(ok)
+    NodoLista* sig; // siguiente
 
     explicit NodoLista(Bicicleta* b) : dato(b), sig(nullptr) {}
 };

@@ -20,7 +20,7 @@ private:
     void intercambiar(OrdenTaller& a, OrdenTaller& b);
     void flotar(int i);
     void hundir(int i);
-    void agrandar();
+    void agrandar();    
 
 public:
     MinHeap(int capacidadInicial = 16);
